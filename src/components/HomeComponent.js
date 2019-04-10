@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Jumbotron, ListGroup, ListGroupItem, ListGroupItemText } from 'reactstrap';
+import { Jumbotron, ListGroup, ListGroupItem } from 'reactstrap';
 
 const IDEAS = [ {id: 1, text: 'a great idea!'},
 								{id: 2, text: 'a great idea!'},
