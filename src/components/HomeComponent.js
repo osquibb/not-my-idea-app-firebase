@@ -21,10 +21,10 @@ const IDEAS = [ {id: 1, text: 'a great idea!'},
 function Ideas(props) {
 	return props.ideas.map(idea => 
 	<ListGroupItem key={idea.id}>
-	<a className="fa fa-thumbs-down fa-2x mr-4 text-danger"></a>
-	<a className="fa fa-thumbs-up fa-2x mr-4 text-success"></a>
+	<a className="fa fa-arrow-down fa-2x mr-4 text-muted"></a>
+	<a className="fa fa-arrow-up fa-2x mr-4 text-muted"></a>
 	{idea.text}
-	<a className="fa fa-ban fa-2x float-right text-warning"></a>
+	<a className="fa fa-ban fa-2x float-right text-muted"></a>
 	</ListGroupItem>);
 }
 
