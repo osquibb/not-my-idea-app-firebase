@@ -27,7 +27,7 @@ export default class Header extends Component {
             <DropdownToggle caret>
               Sign In
             </DropdownToggle>
-            <DropdownMenu>
+            <DropdownMenu right={true} className="mt-2">
                 <Form className="px-3 py-3">
                   <FormGroup>
                     <Input type="email" name="email" id="exampleEmail" placeholder="Username" />

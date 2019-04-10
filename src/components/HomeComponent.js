@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'reactstrap';
+import { Row, Col, Jumbotron } from 'reactstrap';
 
 
 export default class Home extends Component {
 	render() {
 		return(
-			<Row>
-				<Col className="text-center">
-					Home Text
-				</Col>
-      </Row>
+				<Jumbotron className="mt-3" >
+					
+				</Jumbotron>
     );
 	}
 }

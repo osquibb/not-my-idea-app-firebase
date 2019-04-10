@@ -6,7 +6,7 @@ export default class Footer extends Component {
 		return(
 			<Row>
 				<Col className="text-center">
-					by os.
+				&copy; o+k
 				</Col>
       </Row>
     );
