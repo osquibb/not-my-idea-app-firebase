@@ -1,22 +1,5 @@
-import React, { Component } from 'react';
-import { Jumbotron, ListGroup, ListGroupItem } from 'reactstrap';
-
-const IDEAS = [ {id: 1, text: 'a great idea!'},
-								{id: 2, text: 'a great idea!'},
-								{id: 3, text: 'a great idea!'},
-								{id: 4, text: 'a great idea!'},
-								{id: 5, text: 'a great idea!'},
-								{id: 6, text: 'a great idea!'},
-								{id: 7, text: 'a great idea!'},
-								{id: 8, text: 'a great idea!'},
-								{id: 9, text: 'a great idea!'},
-								{id: 10, text: 'a great idea!'},
-								{id: 11, text: 'a great idea!'},
-								{id: 12, text: 'a great idea!'},
-								{id: 13, text: 'a great idea!'},
-								{id: 14, text: 'a great idea!'},
-								{id: 15, text: 'a great idea!'}
-						];
+import React, { Component, Fragment } from 'react';
+import { Button, Col, Form, Input, Jumbotron, ListGroup, ListGroupItem } from 'reactstrap';
 
 function Ideas(props) {
 	return props.ideas.map(idea => 
@@ -29,13 +12,49 @@ function Ideas(props) {
 }
 
 export default class Home extends Component {
+
+	constructor(props) {
+		super(props);
+		this.state = { inputText: '' };
+
+		this.handleChange = this.handleChange.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
+	}
+
+	handleChange(event) {
+		this.setState({inputText: event.target.value});
+	}
+
+	handleSubmit(event) {
+		this.props.postIdea(this.state.inputText);
+		event.preventDefault();
+	}
+
 	render() {
+
 		return(
-				<Jumbotron className="mt-3">
-					<ListGroup>
-						<Ideas ideas={IDEAS} />
-					</ListGroup>
-				</Jumbotron>
+				<Fragment>
+						<Form className="row mt-3" onSubmit={this.handleSubmit}>
+							<Col xs="10 mb-2">
+							<Input type="text" 
+										 value={this.state.inputText} 
+										 onChange={this.handleChange} 
+										 placeholder="your idea..." />
+							</Col>
+							<Col xs="2 mt-auto text-center">
+							<Button type="submit" 
+											className="mb-2 text-right text-muted"
+											outline={true} >
+								<i className="fa fa-plus"/>
+							</Button>
+							</Col>
+						</Form>
+					<Jumbotron className="mt-2">
+						<ListGroup>
+							<Ideas ideas={this.props.ideas} />
+						</ListGroup>
+					</Jumbotron>
+				</Fragment>
     );
 	}
 }
