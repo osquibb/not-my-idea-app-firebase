@@ -7,7 +7,8 @@ function Ideas(props) {
 	<a className="fa fa-arrow-down fa-2x mr-4 text-muted"></a>
 	<a className="fa fa-arrow-up fa-2x mr-4 text-muted"></a>
 	{idea.text}
-	<a className="fa fa-ban fa-2x float-right text-muted"></a>
+	<a className="fa fa-ban fa-2x float-right text-muted"
+		 onClick={() => props.deleteIdea(idea.id)}></a>
 	</ListGroupItem>);
 }
 
@@ -51,7 +52,8 @@ export default class Home extends Component {
 						</Form>
 					<Jumbotron className="mt-2">
 						<ListGroup>
-							<Ideas ideas={this.props.ideas} />
+							<Ideas ideas={this.props.ideas}
+										 deleteIdea={this.props.deleteIdea} />
 						</ListGroup>
 					</Jumbotron>
 				</Fragment>

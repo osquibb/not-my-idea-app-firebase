@@ -1,24 +1,15 @@
 {
   "ideas": [
     {
-      "text": "a new idea!",
-      "date": "2019-04-11T19:19:42.822Z",
+      "text": "an idea",
+      "date": "2019-04-12T15:43:37.340Z",
       "id": 1
     },
     {
-      "text": "a new idea!",
-      "date": "2019-04-11T19:19:44.414Z",
-      "id": 2
-    },
-    {
       "text": "another idea",
-      "date": "2019-04-11T19:19:54.090Z",
-      "id": 3
-    },
-    {
-      "text": "and another idea!!",
-      "date": "2019-04-11T19:20:05.106Z",
-      "id": 4
+      "date": "2019-04-12T15:43:41.972Z",
+      "id": 2
     }
-  ]
+  ],
+  "flaggedIdeas": []
 }

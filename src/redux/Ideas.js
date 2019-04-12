@@ -43,6 +43,13 @@ export const Ideas = (state = {
                    errorMessage: action.data,
                    ideas: []
         };
+
+      // 1 flagged idea REMOVED FROM state's ideas array
+      // Rest of state unchanged
+      case ActionTypes.REMOVE_IDEA:
+        const flaggedIdeaId = action.data;
+        return {...state, ideas: state.ideas.filter(idea => idea.id !== flaggedIdeaId)};
+
       default:
         return state;
     }

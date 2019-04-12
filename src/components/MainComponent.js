@@ -5,7 +5,7 @@ import Footer from './FooterComponent';
 import { Container } from 'reactstrap';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { fetchIdeas, postIdea } from '../redux/ActionCreators';
+import { fetchIdeas, postIdea, deleteIdea } from '../redux/ActionCreators';
 
 // map store state to props
 // each field contains a state
@@ -18,7 +18,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
 	fetchIdeas: () => dispatch(fetchIdeas()),
-	postIdea: idea => dispatch(postIdea(idea))
+	postIdea: idea => dispatch(postIdea(idea)),
+	deleteIdea: flaggedIdeaId => dispatch(deleteIdea(flaggedIdeaId))
 });
 
 class Main extends Component {
@@ -36,6 +37,7 @@ class Main extends Component {
 								 component={() => 
 														<Home ideas={this.props.ideas.ideas}
 																	postIdea={this.props.postIdea}
+																	deleteIdea={this.props.deleteIdea}
 																	ideasLoading={this.props.ideas.isLoading}
 																	ideasErrorMessage={this.props.ideas.errorMessage}/>}
 					/>
