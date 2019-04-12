@@ -1,14 +1,10 @@
 {
   "ideas": [
     {
-      "text": "an idea",
-      "date": "2019-04-12T15:43:37.340Z",
+      "text": "a new idea",
+      "rank": 0,
+      "date": "2019-04-12T19:54:44.346Z",
       "id": 1
-    },
-    {
-      "text": "another idea again",
-      "date": "2019-04-12T15:54:47.910Z",
-      "id": 3
     }
   ],
   "flaggedIdeas": []
