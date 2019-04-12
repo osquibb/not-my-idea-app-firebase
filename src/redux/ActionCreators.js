@@ -152,5 +152,49 @@ export const deleteIdea = flaggedIdeaId => dispatch => {
   })
   .then(() => dispatch(removeIdea(flaggedIdeaId)))
   .catch(error => alert('Error: ' + error.message));
+};
 
-}
+
+
+// New below... need to add changeIdeaRank() action creator
+// to update store state
+
+export const changeRank = (idea, upOrDown) => dispatch => {
+  const newRankIdea = idea;
+  newRankIdea.rank = upOrDown === 'up' ? newRankIdea.rank + 1 :
+                     newRankIdea.rank - 1;
+  return fetch(baseUrl + `ideas/${idea.id}`, {
+    method: 'PUT',
+    body: JSON.stringify(newRankIdea),
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'same-origin'
+  })
+  .then(response => {
+    // if server is contacted (Promise Fulfilled) 
+    // & response status is 200-299
+    if (response.ok) {
+      return response;
+    }
+    // if server is contacted (Promise Fulfilled)
+    // & code status is NOT 200-299
+    else {
+      let error = new Error('Error ' + response.status
+                  + ': ' + response.statusText);
+      error.response = response;
+      throw error;
+    }
+  },
+  // if server communication failes.  (Promise Rejected)
+  error => {
+    let errorMessage = new Error(error.message);
+    throw errorMessage;
+  })
+  .then(response => response.json())
+  // have addIdea create an action which adds the 1 idea to the state's array
+  .then(idea => dispatch(changeIdeaRank(idea.id)))
+  // catch either of the thrown errors and then call alert()
+  .catch(error => alert('Error: ' + error.message));
+
+};
