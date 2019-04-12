@@ -12,7 +12,8 @@
 /build
 
 # temp server
-/json-server/db.json
+json-server/db.json
+
 
 # Notes
 NOTES.md
