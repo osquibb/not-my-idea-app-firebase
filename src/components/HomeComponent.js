@@ -42,9 +42,9 @@ export default class Home extends Component {
 										 onChange={this.handleChange} 
 										 placeholder="your idea..." />
 							</Col>
-							<Col xs="2 mt-auto text-center">
+							<Col xs="2 mt-auto text-right">
 							<Button type="submit" 
-											className="mb-2 text-right text-muted"
+											className="mb-2 text-muted"
 											outline={true} >
 								<i className="fa fa-plus"/>
 							</Button>
