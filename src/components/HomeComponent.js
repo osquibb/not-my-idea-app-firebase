@@ -8,7 +8,7 @@ function Ideas(props) {
 		 onClick={() => props.changeRank(idea, false)}></a>
 	<a className="fa fa-arrow-up fa-2x mr-4 text-muted"
 		 onClick={() => props.changeRank(idea, true)}></a>
-	{idea.text}
+	{idea.text} (rank: {idea.rank})
 	<a className="fa fa-ban fa-2x float-right text-muted"
 		 onClick={() => props.deleteIdea(idea.id)}></a>
 	</ListGroupItem>);

@@ -53,14 +53,13 @@ export const Ideas = (state = {
       
 
       // In Dev...
-      case ActionTypes.CHANGE_IDEA_RANK:
-        const changeRankIdea = state.ideas.filter(idea => idea.id == action.data.id)[0];
-        const ideaIdx = state.ideas.indexOf(changeRankIdea);
+      case ActionTypes.CHANGE_IDEA:
+        const ideaToChange = state.ideas.filter(idea => idea.id == action.data.id)[0];
+        const ideaIdx = state.ideas.indexOf(ideaToChange);
 
         if(ideaIdx !== -1) {
-          action.data.up ? changeRankIdea.rank++ : changeRankIdea.rank--;
           const newIdeas = state.ideas;
-          newIdeas[ideaIdx] = changeRankIdea;
+          newIdeas[ideaIdx] = action.data;
           return {...state, ideas: newIdeas};
         } else { 
             return state;

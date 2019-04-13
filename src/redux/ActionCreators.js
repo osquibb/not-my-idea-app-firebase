@@ -157,7 +157,7 @@ export const deleteIdea = flaggedIdeaId => dispatch => {
 // In dev...
 export const changeRank = (idea, up) => dispatch => {
   const changeRankIdea = idea;
-  up ? changeIdeaRank.rank++ : changeIdeaRank.rank--;
+  up ? changeRankIdea.rank++ : changeRankIdea.rank--;
 
   return fetch(baseUrl + `ideas/${idea.id}`, {
     method: 'PUT',
@@ -189,20 +189,19 @@ export const changeRank = (idea, up) => dispatch => {
   })
   .then(response => response.json())
   // have addIdea create an action which adds the 1 idea to the state's array
-  .then(idea => dispatch(changeIdeaRank(idea.id, up)))
+  .then(idea => dispatch(changeIdea(idea)))
   // catch either of the thrown errors and then call alert()
   .catch(error => alert('Error: ' + error.message));
 
 };
 
 // In dev...
-const changeIdeaRank = (changeIdeaId, up) => {
-  const changeIdea = {id: changeIdeaId,
-                      up: up};
+const changeIdea = (idea) => {
+  
   return (
     {
-      type: ActionTypes.CHANGE_IDEA_RANK,
-      data: changeIdea
+      type: ActionTypes.CHANGE_IDEA,
+      data: idea
     }
   );      
 };
