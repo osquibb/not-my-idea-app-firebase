@@ -154,7 +154,12 @@ export const deleteIdea = flaggedIdeaId => dispatch => {
   .catch(error => alert('Error: ' + error.message));
 };
 
-// In dev...
+// Thunk action creator function (curried) which implemeents a
+// PUT request to change the rank of an idea
+// args: 1 idea to change, up rank (bool.  false = down rank)
+// thunk: PUT request
+// returns: a function that takes dispatch and (optionally)
+// getState which returns an action object created by changeIdea
 export const changeRank = (idea, up) => dispatch => {
   const changeRankIdea = idea;
   up ? changeRankIdea.rank++ : changeRankIdea.rank--;
@@ -195,9 +200,10 @@ export const changeRank = (idea, up) => dispatch => {
 
 };
 
-// In dev...
+// Action creator function
+// args: 1 changed idea
+// returns action object.  fields: type and data (which 1 changed idea)
 const changeIdea = (idea) => {
-  
   return (
     {
       type: ActionTypes.CHANGE_IDEA,

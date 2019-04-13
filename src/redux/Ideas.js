@@ -52,7 +52,8 @@ export const Ideas = (state = {
         return {...state, ideas: state.ideas.filter(idea => idea.id !== flaggedIdeaId)};
       
 
-      // In Dev...
+      // 1 idea REPLACED BY changed idea
+      // Rest of state unchanged
       case ActionTypes.CHANGE_IDEA:
         const ideaToChange = state.ideas.filter(idea => idea.id == action.data.id)[0];
         const ideaIdx = state.ideas.indexOf(ideaToChange);
