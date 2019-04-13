@@ -154,18 +154,14 @@ export const deleteIdea = flaggedIdeaId => dispatch => {
   .catch(error => alert('Error: ' + error.message));
 };
 
+// In dev...
+export const changeRank = (idea, up) => dispatch => {
+  const changeRankIdea = idea;
+  up ? changeIdeaRank.rank++ : changeIdeaRank.rank--;
 
-
-// New below... need to add changeIdeaRank() action creator
-// to update store state
-
-export const changeRank = (idea, upOrDown) => dispatch => {
-  const newRankIdea = idea;
-  newRankIdea.rank = upOrDown === 'up' ? newRankIdea.rank + 1 :
-                     newRankIdea.rank - 1;
   return fetch(baseUrl + `ideas/${idea.id}`, {
     method: 'PUT',
-    body: JSON.stringify(newRankIdea),
+    body: JSON.stringify(changeRankIdea),
     headers: {
       'Content-Type': 'application/json'
     },
@@ -193,8 +189,20 @@ export const changeRank = (idea, upOrDown) => dispatch => {
   })
   .then(response => response.json())
   // have addIdea create an action which adds the 1 idea to the state's array
-  .then(idea => dispatch(changeIdeaRank(idea.id)))
+  .then(idea => dispatch(changeIdeaRank(idea.id, up)))
   // catch either of the thrown errors and then call alert()
   .catch(error => alert('Error: ' + error.message));
 
+};
+
+// In dev...
+const changeIdeaRank = (changeIdeaId, up) => {
+  const changeIdea = {id: changeIdeaId,
+                      up: up};
+  return (
+    {
+      type: ActionTypes.CHANGE_IDEA_RANK,
+      data: changeIdea
+    }
+  );      
 };

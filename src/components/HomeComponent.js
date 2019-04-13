@@ -4,8 +4,10 @@ import { Button, Col, Form, Input, Jumbotron, ListGroup, ListGroupItem } from 'r
 function Ideas(props) {
 	return props.ideas.map(idea => 
 	<ListGroupItem key={idea.id}>
-	<a className="fa fa-arrow-down fa-2x mr-4 text-muted"></a>
-	<a className="fa fa-arrow-up fa-2x mr-4 text-muted"></a>
+	<a className="fa fa-arrow-down fa-2x mr-4 text-muted"
+		 onClick={() => props.changeRank(idea, false)}></a>
+	<a className="fa fa-arrow-up fa-2x mr-4 text-muted"
+		 onClick={() => props.changeRank(idea, true)}></a>
 	{idea.text}
 	<a className="fa fa-ban fa-2x float-right text-muted"
 		 onClick={() => props.deleteIdea(idea.id)}></a>
@@ -53,7 +55,8 @@ export default class Home extends Component {
 					<Jumbotron className="mt-2">
 						<ListGroup>
 							<Ideas ideas={this.props.ideas}
-										 deleteIdea={this.props.deleteIdea} />
+										 deleteIdea={this.props.deleteIdea}
+										 changeRank={this.props.changeRank} />
 						</ListGroup>
 					</Jumbotron>
 				</Fragment>

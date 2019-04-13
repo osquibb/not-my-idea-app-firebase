@@ -1,4 +1,5 @@
 import * as ActionTypes from './ActionTypes';
+import { STATUS_CODES } from 'http';
 
 // IDEAS REDUCER
 // args: original state + action (object created by ActionCreator)
@@ -49,7 +50,22 @@ export const Ideas = (state = {
       case ActionTypes.REMOVE_IDEA:
         const flaggedIdeaId = action.data;
         return {...state, ideas: state.ideas.filter(idea => idea.id !== flaggedIdeaId)};
+      
 
+      // In Dev...
+      case ActionTypes.CHANGE_IDEA_RANK:
+        const changeRankIdea = state.ideas.filter(idea => idea.id == action.data.id)[0];
+        const ideaIdx = state.ideas.indexOf(changeRankIdea);
+
+        if(ideaIdx !== -1) {
+          action.data.up ? changeRankIdea.rank++ : changeRankIdea.rank--;
+          const newIdeas = state.ideas;
+          newIdeas[ideaIdx] = changeRankIdea;
+          return {...state, ideas: newIdeas};
+        } else { 
+            return state;
+        }
+        
       default:
         return state;
     }

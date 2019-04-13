@@ -2,7 +2,7 @@
   "ideas": [
     {
       "text": "a new idea",
-      "rank": 0,
+      "rank": 3,
       "date": "2019-04-12T19:54:44.346Z",
       "id": 1
     },
@@ -14,7 +14,7 @@
     },
     {
       "text": "and another!",
-      "rank": 0,
+      "rank": -1,
       "date": "2019-04-12T19:59:36.901Z",
       "id": 3
     },
