@@ -2,7 +2,7 @@
   "ideas": [
     {
       "text": "a new idea",
-      "rank": 9,
+      "rank": 2,
       "date": "2019-04-12T19:54:44.346Z",
       "id": 1
     },
@@ -11,6 +11,12 @@
       "rank": 1,
       "date": "2019-04-12T21:30:49.072Z",
       "id": 5
+    },
+    {
+      "text": "and another!",
+      "rank": 6,
+      "date": "2019-04-13T20:47:19.676Z",
+      "id": 6
     }
   ],
   "flaggedIdeas": []
