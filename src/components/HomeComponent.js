@@ -4,13 +4,13 @@ import { Button, Col, Form, Input, Jumbotron, ListGroup, ListGroupItem } from 'r
 function Ideas(props) {
 	return props.ideas.map(idea => 
 	<ListGroupItem key={idea.id}>
-	<a className="fa fa-arrow-down fa-2x mr-4 text-muted"
-		 onClick={() => props.changeRank(idea, false)}></a>
-	<a className="fa fa-arrow-up fa-2x mr-4 text-muted"
-		 onClick={() => props.changeRank(idea, true)}></a>
+	<Button color="none" className="fa fa-arrow-down fa-2x mr-2 text-muted"
+		 onClick={() => props.changeRank(idea, false)}></Button>
+	<Button color="none" className="fa fa-arrow-up fa-2x mr-3 text-muted"
+		 onClick={() => props.changeRank(idea, true)}></Button>
 	{idea.text} (rank: {idea.rank})
-	<a className="fa fa-ban fa-2x float-right text-muted"
-		 onClick={() => props.deleteIdea(idea.id)}></a>
+	<Button color="none" className="fa fa-ban fa-2x float-right text-muted"
+		 onClick={() => props.deleteIdea(idea.id)}></Button>
 	</ListGroupItem>);
 }
 
@@ -45,9 +45,11 @@ export default class Home extends Component {
 										 placeholder="your idea..." />
 							</Col>
 							<Col xs="2 mt-auto text-right">
-							<Button type="submit" 
+							<Button type="submit"
+											id="addIdea" 
 											className="mb-2 text-muted"
-											outline={true} >
+											outline={true}
+											block={true} >
 								<i className="fa fa-plus"/>
 							</Button>
 							</Col>

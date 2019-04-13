@@ -13,11 +13,14 @@ export const addIdea = idea => (
 // Action creator function
 // args: An array of ideas
 // returns action object.  fields: type and data (which holds ideas array)
-export const addIdeas = ideas => (
-  { type: ActionTypes.ADD_IDEAS,
-    data: ideas
-  }
-);
+export const addIdeas = ideas => {
+  const sortedIdeas = ideas.sort((a,b) => a.rank > b.rank ? -1 : 1);
+  return(
+    { type: ActionTypes.ADD_IDEAS,
+      data: sortedIdeas
+    }
+  );
+};
 
 // Action creator function
 // returns an empty action (no data) with type IDEAS_LOADING

@@ -7,34 +7,10 @@
       "id": 1
     },
     {
-      "text": "another idea",
-      "rank": -1,
-      "date": "2019-04-12T19:56:50.316Z",
-      "id": 2
-    },
-    {
-      "text": "and another!",
-      "rank": 5,
-      "date": "2019-04-12T19:59:36.901Z",
-      "id": 3
-    },
-    {
-      "text": "and again!",
-      "rank": 1,
-      "date": "2019-04-12T21:30:37.011Z",
-      "id": 4
-    },
-    {
       "text": "a great idea!",
-      "rank": 2,
+      "rank": 1,
       "date": "2019-04-12T21:30:49.072Z",
       "id": 5
-    },
-    {
-      "text": "a new idea!",
-      "rank": 0,
-      "date": "2019-04-13T19:34:38.415Z",
-      "id": 6
     }
   ],
   "flaggedIdeas": []

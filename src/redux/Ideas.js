@@ -1,5 +1,4 @@
 import * as ActionTypes from './ActionTypes';
-import { STATUS_CODES } from 'http';
 
 // IDEAS REDUCER
 // args: original state + action (object created by ActionCreator)
@@ -55,7 +54,7 @@ export const Ideas = (state = {
       // 1 idea REPLACED BY changed idea
       // Rest of state unchanged
       case ActionTypes.CHANGE_IDEA:
-        const ideaToChange = state.ideas.filter(idea => idea.id == action.data.id)[0];
+        const ideaToChange = state.ideas.filter(idea => idea.id === action.data.id)[0];
         const ideaIdx = state.ideas.indexOf(ideaToChange);
 
         if(ideaIdx !== -1) {
