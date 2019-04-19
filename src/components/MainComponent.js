@@ -29,9 +29,9 @@ class Main extends Component {
 	componentDidMount() {
 		this.props.fetchIdeas();
 	}
-	
 
 	ideasAreSorted(ideas) {
+		// returns true if ideas are sorted by rank.  false otherwise.
 		const sortedIdeas = ideas.slice().sort((a,b) => a.rank > b.rank ? -1 : 1);
 	
 		for (let i in ideas) {
