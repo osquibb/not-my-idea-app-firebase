@@ -11,9 +11,9 @@ export const Ideas = (state = {
   }, action) => {
     switch (action.type) {
 
-      // State's ideas array REPLACED BY action's data (ideas array)
+      // State's ideas array REPLACED BY action's data (sorted ideas array)
       // isLoading set to false
-      case ActionTypes.ADD_IDEAS:
+      case ActionTypes.ADD_SORTED_IDEAS:
         return {...state,
                    isLoading: false,
                    errorMessage: null,

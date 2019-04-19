@@ -11,13 +11,12 @@ export const addIdea = idea => (
 );
 
 // Action creator function
-// args: An array of ideas
-// returns action object.  fields: type and data (which holds ideas array)
-export const addIdeas = ideas => {
-  const sortedIdeas = ideas.sort((a,b) => a.rank > b.rank ? -1 : 1);
+// args: An array of sorted ideas
+// returns action object.  fields: type and data (which holds sorted ideas array)
+export const addSortedIdeas = ideas => {
   return(
-    { type: ActionTypes.ADD_IDEAS,
-      data: sortedIdeas
+    { type: ActionTypes.ADD_SORTED_IDEAS,
+      data: ideas.sort((a,b) => a.rank > b.rank ? -1 : 1)
     }
   );
 };
@@ -73,7 +72,7 @@ export const fetchIdeas = () => dispatch => {
       throw errorMessage;
     })
     .then(response => response.json())
-    .then(ideas => dispatch(addIdeas(ideas)))
+    .then(ideas => dispatch(addSortedIdeas(ideas)))
     // catch either of the thrown errors and then have
     // ideasFailed create an action object
     .catch(error => dispatch(ideasFailed(error.message)));
@@ -214,3 +213,5 @@ const changeIdea = (idea) => {
     }
   );      
 };
+
+

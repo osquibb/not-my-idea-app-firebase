@@ -5,7 +5,7 @@ import Footer from './FooterComponent';
 import { Container } from 'reactstrap';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { fetchIdeas, postIdea, deleteIdea, changeRank } from '../redux/ActionCreators';
+import { fetchIdeas, postIdea, deleteIdea, changeRank, addSortedIdeas } from '../redux/ActionCreators';
 
 // map store state to props
 // each field contains a state
@@ -20,13 +20,33 @@ const mapDispatchToProps = dispatch => ({
 	fetchIdeas: () => dispatch(fetchIdeas()),
 	postIdea: idea => dispatch(postIdea(idea)),
 	deleteIdea: flaggedIdeaId => dispatch(deleteIdea(flaggedIdeaId)),
-	changeRank: (idea, up) => dispatch(changeRank(idea, up))
+	changeRank: (idea, up) => dispatch(changeRank(idea, up)),
+	addSortedIdeas: ideas => dispatch(addSortedIdeas(ideas))
 });
 
 class Main extends Component {
 
 	componentDidMount() {
 		this.props.fetchIdeas();
+	}
+	
+
+	ideasAreSorted(ideas) {
+		const sortedIdeas = ideas.slice().sort((a,b) => a.rank > b.rank ? -1 : 1);
+	
+		for (let i in ideas) {
+			if (ideas[i].rank !== sortedIdeas[i].rank) {
+				return false;
+			}
+		}
+		return true;	
+	}
+
+	componentDidUpdate() {
+		const ideas = this.props.ideas.ideas;
+		if(!this.ideasAreSorted(ideas)) {
+			this.props.addSortedIdeas(ideas);
+		}
 	}
 
 	render() {
