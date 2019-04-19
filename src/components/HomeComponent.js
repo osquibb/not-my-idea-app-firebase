@@ -1,17 +1,31 @@
 import React, { Component, Fragment } from 'react';
 import { Button, Col, Form, Input, Jumbotron, ListGroup, ListGroupItem } from 'reactstrap';
+import { Loading } from './LoadingComponent';
 
 function Ideas(props) {
-	return props.ideas.map(idea => 
-	<ListGroupItem key={idea.id}>
-	<Button color="none" className="fa fa-arrow-down fa-2x mr-2 text-muted"
-		 onClick={() => props.changeRank(idea, false)}></Button>
-	<Button color="none" className="fa fa-arrow-up fa-2x mr-3 text-muted"
-		 onClick={() => props.changeRank(idea, true)}></Button>
-	{idea.text} (rank: {idea.rank})
-	<Button color="none" className="fa fa-ban fa-2x float-right text-muted"
-		 onClick={() => props.deleteIdea(idea.id)}></Button>
-	</ListGroupItem>);
+
+	if (props.isLoading) {
+		return(
+			<Loading />
+		);
+	} else if (props.errorMessage) {
+		return(
+			<div className="text-center">
+				{props.errorMessage}
+			</div>
+		);
+	} else {
+		return props.ideas.map(idea => 
+		<ListGroupItem key={idea.id}>
+		<Button color="none" className="fa fa-arrow-down fa-2x mr-2 text-muted"
+			onClick={() => props.changeRank(idea, false)}></Button>
+		<Button color="none" className="fa fa-arrow-up fa-2x mr-3 text-muted"
+			onClick={() => props.changeRank(idea, true)}></Button>
+		{idea.text} (rank: {idea.rank})
+		<Button color="none" className="fa fa-ban fa-2x float-right text-muted"
+			onClick={() => props.deleteIdea(idea.id)}></Button>
+		</ListGroupItem>);
+	}
 }
 
 export default class Home extends Component {
@@ -54,11 +68,14 @@ export default class Home extends Component {
 							</Button>
 							</Col>
 						</Form>
-					<Jumbotron className="mt-2">
+					<Jumbotron className="mt-3 bg-transparent">
 						<ListGroup>
-							<Ideas ideas={this.props.ideas}
+							<Ideas isLoading={this.props.ideasLoading}
+										 errorMessage={this.props.ideasErrorMessage}
+										 ideas={this.props.ideas}
 										 deleteIdea={this.props.deleteIdea}
-										 changeRank={this.props.changeRank} />
+										 changeRank={this.props.changeRank}
+										 />
 						</ListGroup>
 					</Jumbotron>
 				</Fragment>
