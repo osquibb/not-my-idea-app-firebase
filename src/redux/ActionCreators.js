@@ -50,7 +50,7 @@ export const removeIdea = flaggedIdeaId => (
 // getState which returns an action object (created by either 
 // addIdeas or ideasFailed).
 export const fetchIdeas = () => dispatch => {
-  return fetch(baseUrl + 'ideas') // fetch ideas from the server
+  return fetch('/ideas') // fetch ideas from the server
     .then(response => {
       // if server is contacted (Promise Fulfilled) 
       // & response status is 200-299
@@ -87,7 +87,7 @@ export const postIdea = ideaText => dispatch => {
   const newIdea = {text: ideaText};
   newIdea.rank = 0;
 
-  return fetch(baseUrl + 'ideas', {
+  return fetch('/ideas', {
     method: 'POST',
     body: JSON.stringify(newIdea),  // post the 1 idea to the server
     headers: {
@@ -127,7 +127,7 @@ export const postIdea = ideaText => dispatch => {
 // returns: a function that takes dispatch and (optionally)
 // getState which returns an action object created by removeIdea
 export const deleteIdea = flaggedIdeaId => dispatch => {
-  return fetch(baseUrl + `ideas/${flaggedIdeaId}`, {
+  return fetch(`/ideas/${flaggedIdeaId}`, {
     method: 'DELETE',
     credentials: 'same-origin'
   })
@@ -165,7 +165,7 @@ export const changeRank = (idea, up) => dispatch => {
   const changeRankIdea = idea;
   up ? changeRankIdea.rank++ : changeRankIdea.rank--;
 
-  return fetch(baseUrl + `ideas/${idea.id}`, {
+  return fetch(`/ideas/${idea.id}`, {
     method: 'PUT',
     body: JSON.stringify(changeRankIdea),
     headers: {

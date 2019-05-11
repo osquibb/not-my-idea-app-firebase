@@ -54,7 +54,7 @@ class Main extends Component {
 			<Container>
 				<Header />
 				<Switch>
-					<Route path="/home" 
+					<Route path="/" 
 								 component={() => 
 														<Home ideas={this.props.ideas.ideas}
 																	postIdea={this.props.postIdea}
@@ -63,7 +63,7 @@ class Main extends Component {
 																	ideasLoading={this.props.ideas.isLoading}
 																	ideasErrorMessage={this.props.ideas.errorMessage}/>}
 					/>
-					<Redirect to="/home" />
+					<Redirect to="/" />
 				</Switch>
 				<Footer />
 			</Container>
