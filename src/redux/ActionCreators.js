@@ -166,7 +166,7 @@ export const changeRank = (idea, up) => dispatch => {
 
   return fetch(`/ideas/${idea._id}`, {
     method: 'PUT',
-    body: JSON.stringify(changeRankIdea.rank),
+    body: JSON.stringify(changeRankIdea),
     headers: {
       'Content-Type': 'application/json'
     },
