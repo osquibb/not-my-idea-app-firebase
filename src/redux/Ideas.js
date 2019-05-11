@@ -48,13 +48,13 @@ export const Ideas = (state = {
       // Rest of state unchanged
       case ActionTypes.REMOVE_IDEA:
         const flaggedIdeaId = action.data;
-        return {...state, ideas: state.ideas.filter(idea => idea.id !== flaggedIdeaId)};
+        return {...state, ideas: state.ideas.filter(idea => idea._id !== flaggedIdeaId)};
       
 
       // 1 idea REPLACED BY changed idea
       // Rest of state unchanged
       case ActionTypes.CHANGE_IDEA:
-        const ideaToChange = state.ideas.filter(idea => idea.id === action.data.id)[0];
+        const ideaToChange = state.ideas.filter(idea => idea._id === action.data._id)[0];
         const ideaIdx = state.ideas.indexOf(ideaToChange);
 
         if(ideaIdx !== -1) {

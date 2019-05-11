@@ -1,5 +1,4 @@
 import * as ActionTypes from './ActionTypes';
-import { baseUrl } from './baseUrl';
 
 // Action creator function
 // args: 1 idea object
@@ -165,7 +164,7 @@ export const changeRank = (idea, up) => dispatch => {
   const changeRankIdea = idea;
   up ? changeRankIdea.rank++ : changeRankIdea.rank--;
 
-  return fetch(`/ideas/${idea.id}`, {
+  return fetch(`/ideas/${idea._id}`, {
     method: 'PUT',
     body: JSON.stringify(changeRankIdea),
     headers: {

@@ -16,14 +16,14 @@ function Ideas(props) {
 		);
 	} else {
 		return props.ideas.map(idea => 
-		<ListGroupItem key={idea.id}>
+		<ListGroupItem key={idea._id}>
 		<Button color="none" className="fa fa-arrow-down fa-2x mr-2 text-muted"
 			onClick={() => props.changeRank(idea, false)}></Button>
 		<Button color="none" className="fa fa-arrow-up fa-2x mr-3 text-muted"
 			onClick={() => props.changeRank(idea, true)}></Button>
 		{idea.text} (rank: {idea.rank})
 		<Button color="none" className="fa fa-ban fa-2x float-right text-muted"
-			onClick={() => props.deleteIdea(idea.id)}></Button>
+			onClick={() => props.deleteIdea(idea._id)}></Button>
 		</ListGroupItem>);
 	}
 }
