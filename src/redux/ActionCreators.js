@@ -86,7 +86,6 @@ export const fetchIdeas = () => dispatch => {
 export const postIdea = ideaText => dispatch => {
   const newIdea = {text: ideaText};
   newIdea.rank = 0;
-  newIdea.date = new Date().toISOString();
 
   return fetch(baseUrl + 'ideas', {
     method: 'POST',
