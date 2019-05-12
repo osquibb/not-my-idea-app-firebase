@@ -16,14 +16,18 @@ function Ideas(props) {
 		);
 	} else {
 		return props.ideas.map(idea => 
-		<ListGroupItem key={idea._id}>
+		<ListGroupItem key={idea._id} className="align-middle">
 		<Button color="none" className="fa fa-arrow-down fa-2x mr-2 text-muted"
 			onClick={() => props.changeRank(idea, false)}></Button>
 		<Button color="none" className="fa fa-arrow-up fa-2x mr-3 text-muted"
 			onClick={() => props.changeRank(idea, true)}></Button>
 		{idea.text} (rank: {idea.rank})
-		<Button color="none" className="fa fa-ban fa-2x float-right text-muted"
-			onClick={() => props.deleteIdea(idea._id)}></Button>
+		<Button color="none"
+						style={{"font-size": "1.6rem"}} 
+						className={idea.flagged
+												? "fa fa-flag-o float-right text-warning" 
+												: "fa fa-flag float-right text-warning"}
+			onClick={() => props.flagIdea(idea)}></Button>
 		</ListGroupItem>);
 	}
 }
@@ -73,7 +77,7 @@ export default class Home extends Component {
 							<Ideas isLoading={this.props.ideasLoading}
 										 errorMessage={this.props.ideasErrorMessage}
 										 ideas={this.props.ideas}
-										 deleteIdea={this.props.deleteIdea}
+										 flagIdea={this.props.flagIdea}
 										 changeRank={this.props.changeRank}
 										 />
 						</ListGroup>

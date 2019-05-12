@@ -44,22 +44,29 @@ export const Ideas = (state = {
                    ideas: []
         };
 
-      // 1 flagged idea REMOVED FROM state's ideas array
+      // 1 idea REPLACED by flagged idea
       // Rest of state unchanged
-      case ActionTypes.REMOVE_IDEA:
-        const flaggedIdeaId = action.data;
-        return {...state, ideas: state.ideas.filter(idea => idea._id !== flaggedIdeaId)};
-      
+      case ActionTypes.FLAG_IDEA:
+        const ideaToFlag = state.ideas.filter(idea => idea._id === action.data._id)[0];
+        const ideaToFlagIdx = state.ideas.indexOf(ideaToFlag);
+        
+        if(ideaToFlagIdx !== -1) {
+          const newIdeas = state.ideas;
+          newIdeas[ideaToFlagIdx] = action.data;
+          return {...state, ideas: newIdeas};
+        } else { 
+            return state;
+        }
 
       // 1 idea REPLACED BY changed idea
       // Rest of state unchanged
       case ActionTypes.CHANGE_IDEA:
         const ideaToChange = state.ideas.filter(idea => idea._id === action.data._id)[0];
-        const ideaIdx = state.ideas.indexOf(ideaToChange);
+        const ideaToChangeIdx = state.ideas.indexOf(ideaToChange);
 
-        if(ideaIdx !== -1) {
+        if(ideaToChangeIdx !== -1) {
           const newIdeas = state.ideas;
-          newIdeas[ideaIdx] = action.data;
+          newIdeas[ideaToChangeIdx] = action.data;
           return {...state, ideas: newIdeas};
         } else { 
             return state;
