@@ -172,18 +172,18 @@ export const postIdea = ideaText => dispatch => {
 };
 
 // Thunk action creator function (curried) which implemeents a
-// PUT request to change the rank of an idea
-// args: 1 idea to change, up rank (bool.  false = down rank)
+// PUT request to increment the rank of an idea
+// args: 1 idea to increment rank
 // thunk: PUT request
 // returns: a function that takes dispatch and (optionally)
 // getState which returns an action object created by changeIdea
-export const changeRank = (idea, up) => dispatch => {
-  const changeRankIdea = idea;
-  up ? changeRankIdea.rank++ : changeRankIdea.rank--;
+export const incrementRank = (idea) => dispatch => {
+  const incrementRankIdea = idea;
+  incrementRankIdea.rank++;
 
   return fetch(`/ideas/${idea._id}`, {
     method: 'PUT',
-    body: JSON.stringify(changeRankIdea),
+    body: JSON.stringify(incrementRankIdea),
     headers: {
       'Content-Type': 'application/json'
     },

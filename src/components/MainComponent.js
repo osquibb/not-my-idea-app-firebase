@@ -5,7 +5,7 @@ import Footer from './FooterComponent';
 import { Container } from 'reactstrap';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { fetchIdeas, postIdea, flagIdea, changeRank, addSortedIdeas } from '../redux/ActionCreators';
+import { fetchIdeas, postIdea, flagIdea, incrementRank, addSortedIdeas } from '../redux/ActionCreators';
 
 // map store state to props
 // each field contains a state
@@ -20,7 +20,7 @@ const mapDispatchToProps = dispatch => ({
 	fetchIdeas: () => dispatch(fetchIdeas()),
 	postIdea: idea => dispatch(postIdea(idea)),
 	flagIdea: idea => dispatch(flagIdea(idea)),
-	changeRank: (idea, up) => dispatch(changeRank(idea, up)),
+	incrementRank: (idea) => dispatch(incrementRank(idea)),
 	addSortedIdeas: ideas => dispatch(addSortedIdeas(ideas))
 });
 
@@ -59,7 +59,7 @@ class Main extends Component {
 														<Home ideas={this.props.ideas.ideas}
 																	postIdea={this.props.postIdea}
 																	flagIdea={this.props.flagIdea}
-																	changeRank={this.props.changeRank}
+																	incrementRank={this.props.incrementRank}
 																	ideasLoading={this.props.ideas.isLoading}
 																	ideasErrorMessage={this.props.ideas.errorMessage}/>}
 					/>
