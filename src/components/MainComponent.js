@@ -5,7 +5,8 @@ import Footer from './FooterComponent';
 import { Container } from 'reactstrap';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { fetchIdeas, postIdea, flagIdea, incrementRank, addSortedIdeas } from '../redux/ActionCreators';
+import { fetchIdeas, addSortedIdeas, postIdea,
+				 likeIdeas, flagIdeas } from '../redux/ActionCreators';
 
 // map store state to props
 // each field contains a state
@@ -18,10 +19,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
 	fetchIdeas: () => dispatch(fetchIdeas()),
+	addSortedIdeas: ideas => dispatch(addSortedIdeas(ideas)),
 	postIdea: idea => dispatch(postIdea(idea)),
-	flagIdea: idea => dispatch(flagIdea(idea)),
-	incrementRank: (idea) => dispatch(incrementRank(idea)),
-	addSortedIdeas: ideas => dispatch(addSortedIdeas(ideas))
+	likeIdeas: ideas => dispatch(likeIdeas(ideas)),
+	flagIdeas: ideas => dispatch(flagIdeas(ideas))
 });
 
 class Main extends Component {
@@ -31,7 +32,7 @@ class Main extends Component {
 	}
 
 	ideasAreSorted(ideas) {
-		// returns true if ideas are sorted by rank.  false otherwise.
+		// returns true if ideas are sorted by rank. false otherwise.
 		const sortedIdeas = ideas.slice().sort((a,b) => a.rank > b.rank ? -1 : 1);
 	
 		for (let i in ideas) {

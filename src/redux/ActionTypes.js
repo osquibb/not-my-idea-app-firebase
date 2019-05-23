@@ -1,6 +1,17 @@
 export const ADD_IDEA = 'ADD_IDEA';
 export const ADD_SORTED_IDEAS = 'ADD_SORTED_IDEAS';
+export const UPDATE_IDEAS = 'UPDATE_IDEAS';
 export const IDEAS_LOADING = 'IDEAS_LOADING';
 export const IDEAS_FAILED = 'IDEAS_FAILED';
-export const FLAG_IDEA = 'FLAG_IDEA';
-export const CHANGE_IDEA = 'CHANGE_IDEA';
+
+
+// BELOW NOT YET IMPLEMENTED...
+
+export const LOGIN_REQUEST = 'LOGIN_REQUEST';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_FAILURE = 'LOGIN_FAILURE';
+export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
+export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
+
+
