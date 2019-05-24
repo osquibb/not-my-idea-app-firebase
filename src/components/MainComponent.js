@@ -6,14 +6,15 @@ import { Container } from 'reactstrap';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchIdeas, addSortedIdeas, postIdea, postLikedIdeas,
-				 postFlaggedIdeas } from '../redux/ActionCreators';
+				 postFlaggedIdeas, loginUser, logoutUser, fetchLoggedInStatus } from '../redux/ActionCreators';
 
 // map store state to props
 // each field contains a state
 // example: ideas contains isLoading, errorMessage, & ideas
 const mapStateToProps = state => {
 	return {
-		ideas: state.ideas
+		ideas: state.ideas,
+		auth: state.auth
 	}
 }
 
@@ -22,7 +23,9 @@ const mapDispatchToProps = dispatch => ({
 	addSortedIdeas: ideas => dispatch(addSortedIdeas(ideas)),
 	postIdea: idea => dispatch(postIdea(idea)),
 	postLikedIdeas: ideas => dispatch(postLikedIdeas(ideas)),
-	postFlaggedIdeas: ideas => dispatch(postFlaggedIdeas(ideas))
+	postFlaggedIdeas: ideas => dispatch(postFlaggedIdeas(ideas)),
+	loginUser: creds => dispatch(loginUser(creds)),
+	logoutUser: () => dispatch(logoutUser()),
 });
 
 class Main extends Component {
@@ -53,7 +56,11 @@ class Main extends Component {
 	render() {
 		return (
 			<Container>
-				<Header />
+				<Header
+					auth={this.props.auth}
+					loginUser={this.props.loginUser}
+					logoutUser={this.props.logoutUser}
+				/>
 				<Switch>
 					<Route path="/" 
 								 component={() => 
@@ -62,7 +69,8 @@ class Main extends Component {
 																	postFlaggedIdeas={this.props.postFlaggedIdeas}
 																	postLikedIdeas={this.props.postLikedIdeas}
 																	ideasLoading={this.props.ideas.isLoading}
-																	ideasErrorMessage={this.props.ideas.errorMessage}/>}
+																	ideasErrorMessage={this.props.ideas.errorMessage}
+														/>}
 					/>
 					<Redirect to="/" />
 				</Switch>

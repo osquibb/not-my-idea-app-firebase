@@ -73,7 +73,7 @@ export const Ideas = (state = {
             }
           }
           return {...state, ideas: newLikedIdeas};
-        
+      
       default:
         return state;
     }

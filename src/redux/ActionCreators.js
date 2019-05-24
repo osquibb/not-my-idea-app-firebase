@@ -40,6 +40,9 @@ returns: a function that takes dispatch and (optionally)
 getState which returns an action object (created by either 
 addIdeas or ideasFailed). */
 export const fetchIdeas = () => dispatch => {
+  
+  dispatch(ideasLoading());
+
   return fetch('/ideas')
     .then(response => {
       if (response.ok) {
@@ -98,6 +101,64 @@ export const postIdea = ideaText => dispatch => {
     .then(idea => dispatch(addIdea(idea)))
     .catch(error => alert('Error: ' + error.message));
 };
+
+export const fetchLikedIdeas = () => dispatch => {
+  dispatch(ideasLoading());
+
+  const bearer = 'bearer ' + localStorage.getItem('token');
+
+  return fetch('/users/likedIdeas', {
+    headers: {
+        'Authorization': bearer
+    },
+  })
+  .then(response => {
+      if (response.ok) {
+          return response;
+      }
+      else {
+          var error = new Error('Error ' + response.status + ': ' + response.statusText);
+          error.response = response;
+          throw error;
+      }
+  },
+  error => {
+      var errmess = new Error(error.message);
+      throw errmess;
+  })
+  .then(response => response.json())
+  .then(ideas => dispatch(likeIdeas(ideas)))
+  .catch(error => dispatch(updateIdeasFailed(error.message)));
+}
+
+export const fetchFlaggedIdeas = () => dispatch => {
+  dispatch(ideasLoading());
+
+  const bearer = 'bearer ' + localStorage.getItem('token');
+
+  return fetch('/users/flaggedIdeas', {
+    headers: {
+        'Authorization': bearer
+    },
+  })
+  .then(response => {
+      if (response.ok) {
+          return response;
+      }
+      else {
+          var error = new Error('Error ' + response.status + ': ' + response.statusText);
+          error.response = response;
+          throw error;
+      }
+  },
+  error => {
+      var errmess = new Error(error.message);
+      throw errmess;
+  })
+  .then(response => response.json())
+  .then(ideas => dispatch(flagIdeas(ideas)))
+  .catch(error => dispatch(updateIdeasFailed(error.message)));
+}
 
 /* Thunk action creator function (curried) which implemeents a
 POST request to like an array of ideas
@@ -211,3 +272,90 @@ const flagIdeas = (ideas) => {
   );      
 };
 
+// *** USER LOGIN ACTION CREATORS *** //
+
+export const requestLogin = (creds) => {
+  return {
+      type: ActionTypes.LOGIN_REQUEST,
+      creds
+  }
+}
+
+export const receiveLogin = (response) => {
+  return {
+      type: ActionTypes.LOGIN_SUCCESS,
+      token: response.token
+  }
+}
+
+export const loginError = (message) => {
+  return {
+      type: ActionTypes.LOGIN_FAILURE,
+      message
+  }
+}
+
+// TODO: Update LoginUser to fetch likedIdeas and flaggedIdeas
+export const loginUser = (creds) => (dispatch) => {
+  // We dispatch requestLogin to kickoff the call to the API
+  dispatch(requestLogin(creds))
+
+  return fetch(baseUrl + 'users/login', {
+      method: 'POST',
+      headers: { 
+          'Content-Type':'application/json' 
+      },
+      body: JSON.stringify(creds)
+  })
+  .then(response => {
+      if (response.ok) {
+          return response;
+      } else {
+          var error = new Error('Error ' + response.status + ': ' + response.statusText);
+          error.response = response;
+          throw error;
+      }
+      },
+      error => {
+          throw error;
+      })
+  .then(response => response.json())
+  .then(response => {
+      if (response.success) {
+          // If login was successful, set the token in local storage
+          localStorage.setItem('token', response.token);
+          localStorage.setItem('creds', JSON.stringify(creds));
+          // Dispatch the success action
+          dispatch(fetchLikedIdeas());
+          dispatch(fetchFlaggedIdeas());
+          dispatch(receiveLogin(response));
+      }
+      else {
+          var error = new Error('Error ' + response.status);
+          error.response = response;
+          throw error;
+      }
+  })
+  .catch(error => dispatch(loginError(error.message)))
+};
+
+export const requestLogout = () => {
+  return {
+    type: ActionTypes.LOGOUT_REQUEST
+  }
+}
+
+export const receiveLogout = () => {
+  return {
+    type: ActionTypes.LOGOUT_SUCCESS
+  }
+}
+
+// Logs the user out
+export const logoutUser = () => (dispatch) => {
+  dispatch(requestLogout())
+  localStorage.removeItem('token');
+  localStorage.removeItem('creds');
+  dispatch(favoritesFailed("Error 401: Unauthorized"));
+  dispatch(receiveLogout())
+}
