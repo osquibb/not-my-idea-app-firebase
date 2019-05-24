@@ -50,29 +50,10 @@ export const Ideas = (state = {
       // Array of Ideas REPLACED by array of flagged ideas
       // Rest of state unchanged
       case ActionTypes.FLAG_IDEAS:
-        const newFlaggedIdeas = state.ideas;
-        /* for each idea in the store, if it's in the
-        action payload (of flagged ideas), replace it
-        with the flagged (.flagged) idea. */
-        for(let i=0; i < newFlaggedIdeas.length; i++) {
-          for (let j=0; j < action.payload.length; j++) {
-            if (newFlaggedIdeas[i]._id === action.payload[j]._id) {
-              newFlaggedIdeas[i] = action.payload[j];
-            }
-          }
-        }
-        return {...state, ideas: newFlaggedIdeas};
+        return {...state, ideas: action.payload};
 
       case ActionTypes.LIKE_IDEAS:
-          const newLikedIdeas = state.ideas;
-          for(let i=0; i < newLikedIdeas.length; i++) {
-            for (let j=0; j < action.payload.length; j++) {
-              if (newLikedIdeas[i]._id === action.payload[j]._id) {
-                newLikedIdeas[i] = action.payload[j];
-              }
-            }
-          }
-          return {...state, ideas: newLikedIdeas};
+          return {...state, ideas: action.payload};
       
       default:
         return state;

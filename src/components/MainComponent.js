@@ -6,7 +6,7 @@ import { Container } from 'reactstrap';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchIdeas, addSortedIdeas, postIdea, postLikedIdeas,
-				 postFlaggedIdeas, loginUser, logoutUser, fetchLoggedInStatus } from '../redux/ActionCreators';
+				 postFlaggedIdeas, loginUser, logoutUser } from '../redux/ActionCreators';
 
 // map store state to props
 // each field contains a state
@@ -65,6 +65,7 @@ class Main extends Component {
 					<Route path="/" 
 								 component={() => 
 														<Home ideas={this.props.ideas.ideas}
+																	auth={this.props.auth}
 																	postIdea={this.props.postIdea}
 																	postFlaggedIdeas={this.props.postFlaggedIdeas}
 																	postLikedIdeas={this.props.postLikedIdeas}

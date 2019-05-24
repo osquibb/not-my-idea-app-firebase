@@ -4,7 +4,8 @@ import * as ActionTypes from './ActionTypes';
 args: 1 idea object
 returns action object.  fields: type and payload (which holds the 1 idea) */
 export const addIdea = idea => (
-  { type: ActionTypes.ADD_IDEA,
+  {
+    type: ActionTypes.ADD_IDEA,
     payload: idea
   }
 );
@@ -15,7 +16,7 @@ returns action object.  fields: type and payload (which holds sorted ideas array
 export const addSortedIdeas = ideas => {
   return(
     { type: ActionTypes.ADD_SORTED_IDEAS,
-      payload: ideas.sort((a,b) => a.rank > b.rank ? -1 : 1)
+      payload: ideas.sort((a,b) => a.likedRank > b.likedRank ? -1 : 1)
     }
   );
 };
@@ -128,7 +129,7 @@ export const fetchLikedIdeas = () => dispatch => {
   })
   .then(response => response.json())
   .then(ideas => dispatch(likeIdeas(ideas)))
-  .catch(error => dispatch(updateIdeasFailed(error.message)));
+  .catch(error => dispatch(ideasFailed(error.message)));
 }
 
 export const fetchFlaggedIdeas = () => dispatch => {
@@ -157,7 +158,7 @@ export const fetchFlaggedIdeas = () => dispatch => {
   })
   .then(response => response.json())
   .then(ideas => dispatch(flagIdeas(ideas)))
-  .catch(error => dispatch(updateIdeasFailed(error.message)));
+  .catch(error => dispatch(ideasFailed(error.message)));
 }
 
 /* Thunk action creator function (curried) which implemeents a
@@ -245,14 +246,17 @@ export const postFlaggedIdeas = ideas => dispatch => {
 /* Action creator function
 args: 1 array of ideas
 returns action object.  fields: type and payload (which update ideas) */
-const likeIdeas = (ideas) => {
-  for(let i=0; i < ideas.length; i++) {
-    ideas.liked = true;
+const likeIdeas = ideas => getState => {
+  const newLikedIdeas = getState().ideas.ideas;
+  for (let i=0; i < newLikedIdeas.length; i++) {
+    if (ideas.indexOf(newLikedIdeas[i]._id) !== -1) {
+      newLikedIdeas[i].liked = true;
+    }
   }
   return (
     {
       type: ActionTypes.LIKE_IDEAS,
-      payload: ideas
+      payload: newLikedIdeas
     }
   );      
 };
@@ -260,14 +264,17 @@ const likeIdeas = (ideas) => {
 /* Action creator function
 args: 1 array of ideas
 returns action object.  fields: type and payload (which update ideas) */
-const flagIdeas = (ideas) => {
-  for(let i=0; i < ideas.length; i++) {
-    ideas.flagged = true;
+const flagIdeas = ideas => getState => {
+  const newFlaggedIdeas = getState().ideas.ideas;
+  for (let i=0; i < newFlaggedIdeas.length; i++) {
+    if (ideas.indexOf(newFlaggedIdeas[i]._id) !== -1) {
+      newFlaggedIdeas[i].flagged = true;
+    }
   }
   return (
     {
       type: ActionTypes.FLAG_IDEAS,
-      payload: ideas
+      payload: newFlaggedIdeas
     }
   );      
 };
@@ -300,7 +307,7 @@ export const loginUser = (creds) => (dispatch) => {
   // We dispatch requestLogin to kickoff the call to the API
   dispatch(requestLogin(creds))
 
-  return fetch(baseUrl + 'users/login', {
+  return fetch('/users/login', {
       method: 'POST',
       headers: { 
           'Content-Type':'application/json' 
@@ -326,6 +333,7 @@ export const loginUser = (creds) => (dispatch) => {
           localStorage.setItem('token', response.token);
           localStorage.setItem('creds', JSON.stringify(creds));
           // Dispatch the success action
+          dispatch(fetchIdeas());
           dispatch(fetchLikedIdeas());
           dispatch(fetchFlaggedIdeas());
           dispatch(receiveLogin(response));
@@ -356,6 +364,6 @@ export const logoutUser = () => (dispatch) => {
   dispatch(requestLogout())
   localStorage.removeItem('token');
   localStorage.removeItem('creds');
-  dispatch(favoritesFailed("Error 401: Unauthorized"));
-  dispatch(receiveLogout())
+  dispatch(fetchIdeas());
+  dispatch(receiveLogout());
 }

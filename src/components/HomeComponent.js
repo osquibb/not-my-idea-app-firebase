@@ -17,17 +17,18 @@ function Ideas(props) {
 	} else {
 		return props.ideas.map(idea => 
 		<ListGroupItem key={idea._id} className="align-middle">
-		<Button color="none" className={idea.liked
-																			? "far fa-lightbulb fa-2x mr-3"
-																			: "fas fa-lightbulb fa-2x mr-3" }
-			onClick={() => props.postLikedIdeas([idea])}></Button>
+		<Button color="none" 
+						className="far fa-lightbulb fa-2x mr-3"
+						onClick={() => props.postLikedIdeas([idea])}
+		/>
 		{idea.text} (rank: {idea.likedRank})
 		<Button color="none"
 						style={{"font-size": "1.6rem"}} 
-						className={idea.flagged
-												? "far fa-flag float-right text-warning" 
-												: "fas fa-flag float-right text-warning"}
-			onClick={() => props.postFlagged([idea])}></Button>
+						className="far fa-flag float-right text-warning" 							
+						onClick={() => props.postFlagged([idea])}
+		/>
+
+					
 		</ListGroupItem>);
 	}
 }
@@ -76,6 +77,7 @@ export default class Home extends Component {
 						<ListGroup>
 							<Ideas 
 								ideas={this.props.ideas}
+								auth={this.props.auth}
 								postLikedIdeas={this.props.postLikedIdeas}
 								postFlaggedIdeas={this.props.postFlaggedIdeas}
 								isLoading={this.props.ideasLoading}
