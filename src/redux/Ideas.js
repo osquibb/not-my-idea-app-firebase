@@ -25,6 +25,8 @@ export const Ideas = (state = {
       // Rest of state unchanged
       case ActionTypes.ADD_IDEA:
         const idea = action.payload;
+        idea.flagged = false;
+        idea.liked = false;
         return {...state, ideas: state.ideas.concat(idea)};
 
       // isLoading SET TO (or REPLACED BY) true
@@ -45,33 +47,32 @@ export const Ideas = (state = {
                    ideas: []
         };
 
-      // 1 idea REPLACED by flagged idea
+      // Array of Ideas REPLACED by array of flagged ideas
       // Rest of state unchanged
-      case ActionTypes.FLAG_IDEA:
-        const ideaToFlag = state.ideas.filter(idea => idea._id === action.payload._id)[0];
-        const ideaToFlagIdx = state.ideas.indexOf(ideaToFlag);
-        
-        if(ideaToFlagIdx !== -1) {
-          const newIdeas = state.ideas;
-          newIdeas[ideaToFlagIdx] = action.payload;
-          return {...state, ideas: newIdeas};
-        } else { 
-            return state;
+      case ActionTypes.FLAG_IDEAS:
+        const newFlaggedIdeas = state.ideas;
+        /* for each idea in the store, if it's in the
+        action payload (of flagged ideas), replace it
+        with the flagged (.flagged) idea. */
+        for(let i=0; i < newFlaggedIdeas.length; i++) {
+          for (let j=0; j < action.payload.length; j++) {
+            if (newFlaggedIdeas[i]._id === action.payload[j]._id) {
+              newFlaggedIdeas[i] = action.payload[j];
+            }
+          }
         }
+        return {...state, ideas: newFlaggedIdeas};
 
-      // 1 idea REPLACED BY changed idea
-      // Rest of state unchanged
-      case ActionTypes.CHANGE_IDEA:
-        const ideaToChange = state.ideas.filter(idea => idea._id === action.payload._id)[0];
-        const ideaToChangeIdx = state.ideas.indexOf(ideaToChange);
-
-        if(ideaToChangeIdx !== -1) {
-          const newIdeas = state.ideas;
-          newIdeas[ideaToChangeIdx] = action.payload;
-          return {...state, ideas: newIdeas};
-        } else { 
-            return state;
-        }
+      case ActionTypes.LIKE_IDEAS:
+          const newLikedIdeas = state.ideas;
+          for(let i=0; i < newLikedIdeas.length; i++) {
+            for (let j=0; j < action.payload.length; j++) {
+              if (newLikedIdeas[i]._id === action.payload[j]._id) {
+                newLikedIdeas[i] = action.payload[j];
+              }
+            }
+          }
+          return {...state, ideas: newLikedIdeas};
         
       default:
         return state;

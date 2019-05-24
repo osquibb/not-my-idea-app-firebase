@@ -17,15 +17,17 @@ function Ideas(props) {
 	} else {
 		return props.ideas.map(idea => 
 		<ListGroupItem key={idea._id} className="align-middle">
-		<Button color="none" className="far fa-lightbulb fa-2x mr-3"
-			onClick={() => props.incrementRank(idea)}></Button>
-		{idea.text} (rank: {idea.rank})
+		<Button color="none" className={idea.liked
+																			? "far fa-lightbulb fa-2x mr-3"
+																			: "fas fa-lightbulb fa-2x mr-3" }
+			onClick={() => props.postLikedIdeas([idea])}></Button>
+		{idea.text} (rank: {idea.likedRank})
 		<Button color="none"
 						style={{"font-size": "1.6rem"}} 
 						className={idea.flagged
 												? "far fa-flag float-right text-warning" 
 												: "fas fa-flag float-right text-warning"}
-			onClick={() => props.flagIdea(idea)}></Button>
+			onClick={() => props.postFlagged([idea])}></Button>
 		</ListGroupItem>);
 	}
 }
@@ -72,12 +74,13 @@ export default class Home extends Component {
 						</Form>
 					<Jumbotron className="mt-3 bg-transparent">
 						<ListGroup>
-							<Ideas isLoading={this.props.ideasLoading}
-										 errorMessage={this.props.ideasErrorMessage}
-										 ideas={this.props.ideas}
-										 flagIdea={this.props.flagIdea}
-										 incrementRank={this.props.incrementRank}
-										 />
+							<Ideas 
+								ideas={this.props.ideas}
+								postLikedIdeas={this.props.postLikedIdeas}
+								postFlaggedIdeas={this.props.postFlaggedIdeas}
+								isLoading={this.props.ideasLoading}
+								errorMessage={this.props.ideasErrorMessage}
+							/>
 						</ListGroup>
 					</Jumbotron>
 				</Fragment>

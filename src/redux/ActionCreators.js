@@ -105,7 +105,7 @@ args: an array of ideas to like
 thunk: POST request
 returns: a function that takes dispatch and (optionally)
 getState which returns an action object created by updateIdea */
-export const likeIdeas = ideas => dispatch => {
+export const postLikedIdeas = ideas => dispatch => {
   const ideasToLike = ideas.map(idea => {
     return({"_id": idea._id});
   });
@@ -136,7 +136,7 @@ export const likeIdeas = ideas => dispatch => {
     throw errorMessage;
   })
   .then(response => response.json())
-  .then(ideas => dispatch(updateIdeas(ideas, toLike=true)))
+  .then(ideas => dispatch(likeIdeas(ideas)))
   .catch(error => alert('Error: ' + error.message));
 };
 
@@ -146,7 +146,7 @@ args: an array of ideas to flag
 thunk: POST request
 returns: a function that takes dispatch and (optionally)
 getState which returns an action object created by updateIdea */
-export const flagIdeas = ideas => dispatch => {
+export const postFlaggedIdeas = ideas => dispatch => {
   const ideasToFlag = ideas.map(idea => {
     return({"_id": idea._id});
   });
@@ -177,44 +177,37 @@ export const flagIdeas = ideas => dispatch => {
     throw errorMessage;
   })
   .then(response => response.json())
-  .then(ideas => dispatch(updateIdeas(ideas, toFlag=true)))
+  .then(ideas => dispatch(flagIdeas(ideas)))
   .catch(error => alert('Error: ' + error.message));
 };
 
 /* Action creator function
 args: 1 array of ideas
 returns action object.  fields: type and payload (which update ideas) */
-const updateIdeas = (ideas, toLike=false, toFlag=false) => {
-  if (toLike) {
-    for(let i=0; i < ideas.length; i++) {
-      ideas[i].liked = true;
+const likeIdeas = (ideas) => {
+  for(let i=0; i < ideas.length; i++) {
+    ideas.liked = true;
+  }
+  return (
+    {
+      type: ActionTypes.LIKE_IDEAS,
+      payload: ideas
     }
-    return (
-      {
-        type: ActionTypes.UPDATE_IDEAS,
-        payload: ideas
-      }
-    );      
-  }
-  if (toFlag) {
-    for(let i=0; i < ideas.length; i++) {
-      ideas[i].flagged = true;
-    }
-    return (
-      {
-        type: ActionTypes.UPDATE_IDEAS,
-        payload: ideas
-      }
-    );      
-  }
-  else {
-    return (
-      {
-        type: ActionTypes.UPDATE_IDEAS,
-        payload: ideas
-      }
-    );      
-  }
+  );      
 };
 
+/* Action creator function
+args: 1 array of ideas
+returns action object.  fields: type and payload (which update ideas) */
+const flagIdeas = (ideas) => {
+  for(let i=0; i < ideas.length; i++) {
+    ideas.flagged = true;
+  }
+  return (
+    {
+      type: ActionTypes.FLAG_IDEAS,
+      payload: ideas
+    }
+  );      
+};
 

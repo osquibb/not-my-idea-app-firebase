@@ -1,6 +1,7 @@
 export const ADD_IDEA = 'ADD_IDEA';
 export const ADD_SORTED_IDEAS = 'ADD_SORTED_IDEAS';
-export const UPDATE_IDEAS = 'UPDATE_IDEAS';
+export const LIKE_IDEAS = 'LIKE_IDEAS';
+export const FLAG_IDEAS = 'FLAG_IDEAS';
 export const IDEAS_LOADING = 'IDEAS_LOADING';
 export const IDEAS_FAILED = 'IDEAS_FAILED';
 

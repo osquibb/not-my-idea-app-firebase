@@ -5,8 +5,8 @@ import Footer from './FooterComponent';
 import { Container } from 'reactstrap';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { fetchIdeas, addSortedIdeas, postIdea,
-				 likeIdeas, flagIdeas } from '../redux/ActionCreators';
+import { fetchIdeas, addSortedIdeas, postIdea, postLikedIdeas,
+				 postFlaggedIdeas } from '../redux/ActionCreators';
 
 // map store state to props
 // each field contains a state
@@ -21,8 +21,8 @@ const mapDispatchToProps = dispatch => ({
 	fetchIdeas: () => dispatch(fetchIdeas()),
 	addSortedIdeas: ideas => dispatch(addSortedIdeas(ideas)),
 	postIdea: idea => dispatch(postIdea(idea)),
-	likeIdeas: ideas => dispatch(likeIdeas(ideas)),
-	flagIdeas: ideas => dispatch(flagIdeas(ideas))
+	postLikedIdeas: ideas => dispatch(postLikedIdeas(ideas)),
+	postFlaggedIdeas: ideas => dispatch(postFlaggedIdeas(ideas))
 });
 
 class Main extends Component {
@@ -59,8 +59,8 @@ class Main extends Component {
 								 component={() => 
 														<Home ideas={this.props.ideas.ideas}
 																	postIdea={this.props.postIdea}
-																	flagIdea={this.props.flagIdea}
-																	incrementRank={this.props.incrementRank}
+																	postFlaggedIdeas={this.props.postFlaggedIdeas}
+																	postLikedIdeas={this.props.postLikedIdeas}
 																	ideasLoading={this.props.ideas.isLoading}
 																	ideasErrorMessage={this.props.ideas.errorMessage}/>}
 					/>
