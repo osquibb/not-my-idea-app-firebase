@@ -6,7 +6,8 @@ import { Container } from 'reactstrap';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchIdeas, addSortedIdeas, postIdea, postLikedIdeas,
-				 postFlaggedIdeas, loginUser, logoutUser } from '../redux/ActionCreators';
+				 postFlaggedIdeas, fetchLikedIdeas, fetchFlaggedIdeas,
+				 loginUser, logoutUser } from '../redux/ActionCreators';
 
 // map store state to props
 // each field contains a state
@@ -20,6 +21,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
 	fetchIdeas: () => dispatch(fetchIdeas()),
+	fetchLikedIdeas: () => dispatch(fetchLikedIdeas()),
+	fetchFlaggedIdeas: () => dispatch(fetchFlaggedIdeas()),
 	addSortedIdeas: ideas => dispatch(addSortedIdeas(ideas)),
 	postIdea: idea => dispatch(postIdea(idea)),
 	postLikedIdeas: ideas => dispatch(postLikedIdeas(ideas)),
@@ -32,6 +35,8 @@ class Main extends Component {
 
 	componentDidMount() {
 		this.props.fetchIdeas();
+		this.props.fetchLikedIdeas();
+		this.props.fetchFlaggedIdeas();
 	}
 
 	ideasAreSorted(ideas) {
@@ -60,6 +65,8 @@ class Main extends Component {
 					auth={this.props.auth}
 					loginUser={this.props.loginUser}
 					logoutUser={this.props.logoutUser}
+					fetchLikedIdeas={this.props.fetchLikedIdeas}
+					fetchFlaggedIdeas={this.props.fetchFlaggedIdeas}
 				/>
 				<Switch>
 					<Route path="/" 

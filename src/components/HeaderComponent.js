@@ -23,12 +23,14 @@ class CustomDropDown extends Component {
     }));
   }
 
-  logIn() {
-    this.props.loginUser({
+  async logIn() {
+    this.setState({dropdownOpen: false});
+    await this.props.loginUser({
                           username: this.state.userName,
                           password: this.state.password
                         });
-    this.setState({dropdownOpen: false});
+    this.props.fetchLikedIdeas();
+    this.props.fetchFlaggedIdeas();
   }
 
   logOut() {
@@ -104,6 +106,8 @@ export default class Header extends Component {
           <NavbarBrand href="/">Not My Idea</NavbarBrand>
           <CustomDropDown
             auth={this.props.auth}
+            fetchLikedIdeas={this.props.fetchLikedIdeas}
+            fetchFlaggedIdeas={this.props.fetchFlaggedIdeas}
             loginUser={this.props.loginUser}
             logoutUser={this.props.logoutUser}
           />

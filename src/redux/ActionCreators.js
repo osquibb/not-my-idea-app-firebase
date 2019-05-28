@@ -198,10 +198,7 @@ export const postLikedIdeas = ideas => dispatch => {
     throw errorMessage;
   })
   .then(response => response.json())
-  .then(ideas => {
-    console.log('ideas to add to liked: ', ideas);
-    dispatch(addLikedIdeas(ideas));
-  })
+  .then(ideas => dispatch(addLikedIdeas(ideas)))
   .catch(error => alert('Error: ' + error.message));
 };
 
@@ -242,10 +239,7 @@ export const postFlaggedIdeas = ideas => dispatch => {
     throw errorMessage;
   })
   .then(response => response.json())
-  .then(ideas => {
-    console.log('ideas to add to flagged: ', ideas);
-    dispatch(addFlaggedIdeas(ideas));
-  })
+  .then(ideas => dispatch(addFlaggedIdeas(ideas)))
   .catch(error => alert('Error: ' + error.message));
 };
 
@@ -324,9 +318,6 @@ export const loginUser = (creds) => (dispatch) => {
           localStorage.setItem('token', response.token);
           localStorage.setItem('creds', JSON.stringify(creds));
           // Dispatch the success action
-          dispatch(fetchIdeas());
-          dispatch(fetchLikedIdeas());
-          dispatch(fetchFlaggedIdeas());
           dispatch(receiveLogin(response));
       }
       else {
