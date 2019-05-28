@@ -35,16 +35,19 @@ class Main extends Component {
 
 	componentDidMount() {
 		this.props.fetchIdeas();
-		this.props.fetchLikedIdeas();
-		this.props.fetchFlaggedIdeas();
+		if(this.props.auth.isAuthenticated) {
+			this.props.fetchLikedIdeas();
+			this.props.fetchFlaggedIdeas();
+		}
+		
 	}
 
 	ideasAreSorted(ideas) {
 		// returns true if ideas are sorted by rank. false otherwise.
-		const sortedIdeas = ideas.slice().sort((a,b) => a.rank > b.rank ? -1 : 1);
+		const sortedIdeas = ideas.slice().sort((a,b) => a.likedRank > b.likedRank ? -1 : 1);
 	
 		for (let i in ideas) {
-			if (ideas[i].rank !== sortedIdeas[i].rank) {
+			if (ideas[i].likedRank !== sortedIdeas[i].likedRank) {
 				return false;
 			}
 		}

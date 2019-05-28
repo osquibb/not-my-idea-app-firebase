@@ -104,13 +104,12 @@ export const postIdea = ideaText => dispatch => {
 };
 
 export const fetchLikedIdeas = () => dispatch => {
-  dispatch(ideasLoading());
 
   const bearer = 'bearer ' + localStorage.getItem('token');
 
   return fetch('/users/likedIdeas', {
     headers: {
-        'Authorization': bearer
+      'Authorization': bearer
     },
   })
   .then(response => {
@@ -118,28 +117,27 @@ export const fetchLikedIdeas = () => dispatch => {
           return response;
       }
       else {
-          var error = new Error('Error ' + response.status + ': ' + response.statusText);
+          let error = new Error('Error ' + response.status + ': ' + response.statusText);
           error.response = response;
           throw error;
       }
   },
   error => {
-      var errmess = new Error(error.message);
-      throw errmess;
+    let errorMessage = new Error(error.message);
+    throw errorMessage;
   })
   .then(response => response.json())
-  .then(ideas => dispatch(addLikedIdeas(ideas)))
+  .then(ideaIds => dispatch(addLikedIdeas(ideaIds)))
   .catch(error => dispatch(ideasFailed(error.message)));
 }
 
 export const fetchFlaggedIdeas = () => dispatch => {
-  dispatch(ideasLoading());
 
   const bearer = 'bearer ' + localStorage.getItem('token');
 
   return fetch('/users/flaggedIdeas', {
     headers: {
-        'Authorization': bearer
+      'Authorization': bearer
     },
   })
   .then(response => {
@@ -147,17 +145,17 @@ export const fetchFlaggedIdeas = () => dispatch => {
           return response;
       }
       else {
-          var error = new Error('Error ' + response.status + ': ' + response.statusText);
+          let error = new Error('Error ' + response.status + ': ' + response.statusText);
           error.response = response;
           throw error;
       }
   },
   error => {
-      var errmess = new Error(error.message);
-      throw errmess;
+    let errorMessage = new Error(error.message);
+    throw errorMessage;
   })
   .then(response => response.json())
-  .then(ideas => dispatch(addFlaggedIdeas(ideas)))
+  .then(ideaIds => dispatch(addFlaggedIdeas(ideaIds)))
   .catch(error => dispatch(ideasFailed(error.message)));
 }
 
@@ -198,7 +196,7 @@ export const postLikedIdeas = ideas => dispatch => {
     throw errorMessage;
   })
   .then(response => response.json())
-  .then(ideas => dispatch(addLikedIdeas(ideas)))
+  .then(ideaIds => dispatch(addLikedIdeas(ideaIds)))
   .catch(error => alert('Error: ' + error.message));
 };
 
@@ -239,27 +237,27 @@ export const postFlaggedIdeas = ideas => dispatch => {
     throw errorMessage;
   })
   .then(response => response.json())
-  .then(ideas => dispatch(addFlaggedIdeas(ideas)))
+  .then(ideaIds => dispatch(addFlaggedIdeas(ideaIds)))
   .catch(error => alert('Error: ' + error.message));
 };
 
 /* Action creator function
 args: 1 array of ideas
 returns action object.  fields: type and payload (which update ideas) */
-const addLikedIdeas = likedIdeas => (
+const addLikedIdeas = likedIdeaIds => (
   {
     type: ActionTypes.ADD_LIKED_IDEAS,
-    payload: likedIdeas
+    payload: likedIdeaIds
   }
 );      
 
 /* Action creator function
 args: 1 array of ideas
 returns action object.  fields: type and payload (which update ideas) */
-const addFlaggedIdeas = flaggedIdeas => (
+const addFlaggedIdeas = flaggedIdeaIds => (
   {
     type: ActionTypes.ADD_FLAGGED_IDEAS,
-    payload: flaggedIdeas
+    payload: flaggedIdeaIds
   }
 );      
 
