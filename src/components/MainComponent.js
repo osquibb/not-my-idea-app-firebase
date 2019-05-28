@@ -65,6 +65,8 @@ class Main extends Component {
 					<Route path="/" 
 								 component={() => 
 														<Home ideas={this.props.ideas.ideas}
+																	likedIdeas={this.props.ideas.likedIdeas}
+																	flaggedIdeas={this.props.ideas.flaggedIdeas}
 																	auth={this.props.auth}
 																	postIdea={this.props.postIdea}
 																	postFlaggedIdeas={this.props.postFlaggedIdeas}

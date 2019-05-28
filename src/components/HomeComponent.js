@@ -18,17 +18,19 @@ function Ideas(props) {
 		return props.ideas.map(idea => 
 		<ListGroupItem key={idea._id} className="align-middle">
 		<Button color="none" 
-						className="far fa-lightbulb fa-2x mr-3"
+						className={props.likedIdeas.indexOf(idea._id) !== -1
+											 ? "fas fa-lightbulb fa-2x mr-3"	
+											 : "far fa-lightbulb fa-2x mr-3"}
 						onClick={() => props.postLikedIdeas([idea])}
 		/>
 		{idea.text} (rank: {idea.likedRank})
 		<Button color="none"
 						style={{"font-size": "1.6rem"}} 
-						className="far fa-flag float-right text-warning" 							
-						onClick={() => props.postFlagged([idea])}
-		/>
-
-					
+						className={props.flaggedIdeas.indexOf(idea._id) !== -1
+											 ? "fas fa-flag float-right text-warning"
+											 : "far fa-flag float-right text-warning"}					
+						onClick={() => props.postFlaggedIdeas([idea])}
+		/>			
 		</ListGroupItem>);
 	}
 }
@@ -76,8 +78,10 @@ export default class Home extends Component {
 					<Jumbotron className="mt-3 bg-transparent">
 						<ListGroup>
 							<Ideas 
-								ideas={this.props.ideas}
 								auth={this.props.auth}
+								ideas={this.props.ideas}
+								likedIdeas={this.props.likedIdeas}
+								flaggedIdeas={this.props.flaggedIdeas}
 								postLikedIdeas={this.props.postLikedIdeas}
 								postFlaggedIdeas={this.props.postFlaggedIdeas}
 								isLoading={this.props.ideasLoading}

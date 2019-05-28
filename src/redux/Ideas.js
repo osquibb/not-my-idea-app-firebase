@@ -7,7 +7,9 @@ import * as ActionTypes from './ActionTypes';
 export const Ideas = (state = {
                                 isLoading: true,
                                 errorMessage: null,
-                                ideas: [] 
+                                ideas: [],
+                                likedIdeas: [],
+                                flaggedIdeas: [] 
                               },
                       action) => {
     switch (action.type) {
@@ -24,10 +26,9 @@ export const Ideas = (state = {
       // Action's payload (1 idea) ADDED TO state's ideas array
       // Rest of state unchanged
       case ActionTypes.ADD_IDEA:
-        const idea = action.payload;
-        idea.flagged = false;
-        idea.liked = false;
-        return {...state, ideas: state.ideas.concat(idea)};
+        return {...state, 
+                ideas: state.ideas.concat(action.payload)
+        };
 
       // isLoading SET TO (or REPLACED BY) true
       // Rest of state fields REPLACED BY initial values.
@@ -47,13 +48,15 @@ export const Ideas = (state = {
                    ideas: []
         };
 
-      // Array of Ideas REPLACED by array of flagged ideas
-      // Rest of state unchanged
-      case ActionTypes.FLAG_IDEAS:
-        return {...state, ideas: action.payload};
+      case ActionTypes.ADD_FLAGGED_IDEAS:
+        return {...state, 
+                flaggedIdeas: state.flaggedIdeas.concat(action.payload)
+        };
 
-      case ActionTypes.LIKE_IDEAS:
-          return {...state, ideas: action.payload};
+      case ActionTypes.ADD_LIKED_IDEAS:
+        return {...state, 
+                likedIdeas: state.likedIdeas.concat(action.payload)
+        };
       
       default:
         return state;

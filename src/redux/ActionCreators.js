@@ -128,7 +128,7 @@ export const fetchLikedIdeas = () => dispatch => {
       throw errmess;
   })
   .then(response => response.json())
-  .then(ideas => dispatch(likeIdeas(ideas)))
+  .then(ideas => dispatch(addLikedIdeas(ideas)))
   .catch(error => dispatch(ideasFailed(error.message)));
 }
 
@@ -157,7 +157,7 @@ export const fetchFlaggedIdeas = () => dispatch => {
       throw errmess;
   })
   .then(response => response.json())
-  .then(ideas => dispatch(flagIdeas(ideas)))
+  .then(ideas => dispatch(addFlaggedIdeas(ideas)))
   .catch(error => dispatch(ideasFailed(error.message)));
 }
 
@@ -198,7 +198,10 @@ export const postLikedIdeas = ideas => dispatch => {
     throw errorMessage;
   })
   .then(response => response.json())
-  .then(ideas => dispatch(likeIdeas(ideas)))
+  .then(ideas => {
+    console.log('ideas to add to liked: ', ideas);
+    dispatch(addLikedIdeas(ideas));
+  })
   .catch(error => alert('Error: ' + error.message));
 };
 
@@ -239,45 +242,33 @@ export const postFlaggedIdeas = ideas => dispatch => {
     throw errorMessage;
   })
   .then(response => response.json())
-  .then(ideas => dispatch(flagIdeas(ideas)))
+  .then(ideas => {
+    console.log('ideas to add to flagged: ', ideas);
+    dispatch(addFlaggedIdeas(ideas));
+  })
   .catch(error => alert('Error: ' + error.message));
 };
 
 /* Action creator function
 args: 1 array of ideas
 returns action object.  fields: type and payload (which update ideas) */
-const likeIdeas = ideas => getState => {
-  const newLikedIdeas = getState().ideas.ideas;
-  for (let i=0; i < newLikedIdeas.length; i++) {
-    if (ideas.indexOf(newLikedIdeas[i]._id) !== -1) {
-      newLikedIdeas[i].liked = true;
-    }
+const addLikedIdeas = likedIdeas => (
+  {
+    type: ActionTypes.ADD_LIKED_IDEAS,
+    payload: likedIdeas
   }
-  return (
-    {
-      type: ActionTypes.LIKE_IDEAS,
-      payload: newLikedIdeas
-    }
-  );      
-};
+);      
 
 /* Action creator function
 args: 1 array of ideas
 returns action object.  fields: type and payload (which update ideas) */
-const flagIdeas = ideas => getState => {
-  const newFlaggedIdeas = getState().ideas.ideas;
-  for (let i=0; i < newFlaggedIdeas.length; i++) {
-    if (ideas.indexOf(newFlaggedIdeas[i]._id) !== -1) {
-      newFlaggedIdeas[i].flagged = true;
-    }
+const addFlaggedIdeas = flaggedIdeas => (
+  {
+    type: ActionTypes.ADD_FLAGGED_IDEAS,
+    payload: flaggedIdeas
   }
-  return (
-    {
-      type: ActionTypes.FLAG_IDEAS,
-      payload: newFlaggedIdeas
-    }
-  );      
-};
+);      
+
 
 // *** USER LOGIN ACTION CREATORS *** //
 
