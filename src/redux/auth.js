@@ -42,6 +42,21 @@ export const Auth = (state = {
                 token: '',
                 user: null
             };
+        case ActionTypes.SIGN_UP_REQUEST:
+                return {...state,
+                    isLoading: true,
+                };
+            case ActionTypes.SIGN_UP_SUCCESS:
+                return {...state,
+                    isLoading: false,
+                    errMess: '',
+                };
+            case ActionTypes.SIGN_UP_FAILURE:
+                return {...state,
+                    isLoading: false,
+                    isAuthenticated: false,
+                    errMess: action.message
+                };
 
         default:
             return state

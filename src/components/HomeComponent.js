@@ -40,13 +40,14 @@ function Ideas(props) {
 					<ListGroupItemText>
 						{idea.text}
 					</ListGroupItemText>
-					<ListGroupItemText style={{"font-size": ".8rem"}}>
-						Submitted by <strong>{idea.author}</strong> at <strong>{idea.createdAt}</strong>
+					<ListGroupItemText style={{"fontSize": ".75rem"}}>
+						Submitted by <strong>{idea.author.username}</strong> on <strong>{new Date(idea.createdAt).toDateString()}</strong>
 					</ListGroupItemText>
 				</Col>
+
 				<Col xs="2" className="text-center">
 					<Button color="none"
-									style={{"font-size": "1.6rem"}} 
+									style={{"fontSize": "1.6rem"}} 
 									className={props.flaggedIdeas.indexOf(idea._id) !== -1
 														? "fas fa-flag float-right text-warning"
 														: "far fa-flag float-right text-warning"}					

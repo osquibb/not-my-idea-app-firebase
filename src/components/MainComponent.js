@@ -7,7 +7,7 @@ import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchIdeas, addSortedIdeas, postIdea, postLikedIdeas,
 				 postFlaggedIdeas, fetchLikedIdeas, fetchFlaggedIdeas,
-				 loginUser, logoutUser } from '../redux/ActionCreators';
+				 loginUser, logoutUser, signUpUser } from '../redux/ActionCreators';
 
 // map store state to props
 // each field contains a state
@@ -29,6 +29,7 @@ const mapDispatchToProps = dispatch => ({
 	postFlaggedIdeas: ideas => dispatch(postFlaggedIdeas(ideas)),
 	loginUser: creds => dispatch(loginUser(creds)),
 	logoutUser: () => dispatch(logoutUser()),
+	signUpUser: creds => dispatch(signUpUser(creds)) 
 });
 
 class Main extends Component {
@@ -65,8 +66,10 @@ class Main extends Component {
 			<Container>
 				<Header
 					auth={this.props.auth}
+					signUpUser={this.props.signUpUser}
 					loginUser={this.props.loginUser}
 					logoutUser={this.props.logoutUser}
+					fetchIdeas={this.props.fetchIdeas}
 					fetchLikedIdeas={this.props.fetchLikedIdeas}
 					fetchFlaggedIdeas={this.props.fetchFlaggedIdeas}
 				/>

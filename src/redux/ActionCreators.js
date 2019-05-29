@@ -269,21 +269,21 @@ const removeLikedAndFlaggedIdeas = () => (
 
 // *** USER LOGIN ACTION CREATORS *** //
 
-export const requestLogin = (creds) => {
+const requestLogin = (creds) => {
   return {
       type: ActionTypes.LOGIN_REQUEST,
       creds
   }
 }
 
-export const receiveLogin = (response) => {
+const receiveLogin = (response) => {
   return {
       type: ActionTypes.LOGIN_SUCCESS,
       token: response.token
   }
 }
 
-export const loginError = (message) => {
+const loginError = (message) => {
   return {
       type: ActionTypes.LOGIN_FAILURE,
       message
@@ -291,7 +291,7 @@ export const loginError = (message) => {
 }
 
 // TODO: Update LoginUser to fetch likedIdeas and flaggedIdeas
-export const loginUser = (creds) => (dispatch) => {
+export const loginUser = creds => dispatch => {
   // We dispatch requestLogin to kickoff the call to the API
   dispatch(requestLogin(creds))
 
@@ -332,20 +332,20 @@ export const loginUser = (creds) => (dispatch) => {
   .catch(error => dispatch(loginError(error.message)))
 };
 
-export const requestLogout = () => {
+const requestLogout = () => {
   return {
     type: ActionTypes.LOGOUT_REQUEST
   }
 }
 
-export const receiveLogout = () => {
+const receiveLogout = () => {
   return {
     type: ActionTypes.LOGOUT_SUCCESS
   }
 }
 
 // Logs the user out
-export const logoutUser = () => (dispatch) => {
+export const logoutUser = () => dispatch => {
   dispatch(requestLogout())
   localStorage.removeItem('token');
   localStorage.removeItem('creds');
@@ -353,3 +353,61 @@ export const logoutUser = () => (dispatch) => {
   dispatch(fetchIdeas());
   dispatch(receiveLogout());
 }
+
+// TODO: Complete all signup action types and actions...
+
+const requestSignUp = () => {
+  return {
+      type: ActionTypes.SIGN_UP_REQUEST,
+  }
+}
+
+const receiveSignUp = () => {
+  return {
+      type: ActionTypes.SIGN_UP_SUCCESS,
+  }
+}
+
+const signUpError = (message) => {
+  return {
+      type: ActionTypes.SIGN_UP_FAILURE,
+      message
+  }
+}
+
+export const signUpUser = creds => dispatch => {
+  dispatch(requestSignUp());
+
+  return fetch('/users/signup', {
+      method: 'POST',
+      headers: { 
+          'Content-Type':'application/json' 
+      },
+      body: JSON.stringify(creds)
+  })
+  .then(response => {
+      if (response.ok) {
+          return response;
+      } else {
+          var error = new Error('Error ' + response.status + ': ' + response.statusText);
+          error.response = response;
+          throw error;
+      }
+      },
+      error => {
+          throw error;
+      })
+  .then(response => response.json())
+  .then(response => {
+      if (response.success) {
+          // Dispatch the success action
+          dispatch(receiveSignUp(response));
+      }
+      else {
+          var error = new Error('Error ' + response.status);
+          error.response = response;
+          throw error;
+      }
+  })
+  .catch(error => dispatch(signUpError(error.message)))
+};
