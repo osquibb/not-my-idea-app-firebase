@@ -39,7 +39,6 @@ class Main extends Component {
 			this.props.fetchLikedIdeas();
 			this.props.fetchFlaggedIdeas();
 		}
-		
 	}
 
 	ideasAreSorted(ideas) {

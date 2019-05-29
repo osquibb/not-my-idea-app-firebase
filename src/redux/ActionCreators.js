@@ -127,7 +127,7 @@ export const fetchLikedIdeas = () => dispatch => {
     throw errorMessage;
   })
   .then(response => response.json())
-  .then(ideaIds => dispatch(addLikedIdeas(ideaIds)))
+  .then(ideas => dispatch(addLikedIdeas(ideas.map(idea => idea._id))))
   .catch(error => dispatch(ideasFailed(error.message)));
 }
 
@@ -155,7 +155,7 @@ export const fetchFlaggedIdeas = () => dispatch => {
     throw errorMessage;
   })
   .then(response => response.json())
-  .then(ideaIds => dispatch(addFlaggedIdeas(ideaIds)))
+  .then(ideas => dispatch(addFlaggedIdeas(ideas.map(idea => idea._id))))
   .catch(error => dispatch(ideasFailed(error.message)));
 }
 
