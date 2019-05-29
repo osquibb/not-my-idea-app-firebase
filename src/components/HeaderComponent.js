@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Navbar, NavbarBrand, ButtonDropdown, DropdownToggle, DropdownMenu, 
-        DropdownItem, Form, Input, FormGroup, Button, Modal, ModalHeader,
-        ModalBody, ModalFooter } from 'reactstrap'; 
+        DropdownItem, Form, Input, FormGroup, Button } from 'reactstrap'; 
 
 class CustomDropDown extends Component {
   constructor(props) {
@@ -16,6 +15,7 @@ class CustomDropDown extends Component {
     this.handlePassword = this.handlePassword.bind(this);
     this.logIn = this.logIn.bind(this);
     this.logOut = this.logOut.bind(this);
+    this.signUp = this.signUp.bind(this);
   }
 
   toggleDropDown() {
@@ -32,6 +32,19 @@ class CustomDropDown extends Component {
                         });
     this.props.fetchLikedIdeas();
     this.props.fetchFlaggedIdeas();
+  }
+
+  async signUp() {
+    this.setState({signUpModal: false});
+    await this.props.signUpUser({
+                          username: this.state.userName,
+                          password: this.state.password
+                          });
+    await this.props.loginUser({
+                          username: this.state.userName,
+                          password: this.state.password
+                        });
+    this.props.fetchIdeas();
   }
 
   logOut() {
@@ -93,7 +106,7 @@ class CustomDropDown extends Component {
                 </Button>
               </Form>
               <DropdownItem divider />
-              <DropdownItem color="secondary" onClick={() => this.props.toggleSignUpModal()}>Sign up</DropdownItem>
+              <DropdownItem color="secondary" onClick={this.signUp}>Sign up</DropdownItem>
               <DropdownItem>Forgot password?</DropdownItem>
             </React.Fragment>
           } 
@@ -105,47 +118,6 @@ class CustomDropDown extends Component {
 
 export default class Header extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      signUpModal: false,
-      userName: '',
-      password: ''
-    };
-
-    this.handleUserName = this.handleUserName.bind(this);
-    this.handlePassword = this.handlePassword.bind(this);
-    this.toggleSignUpModal = this.toggleSignUpModal.bind(this);
-    this.signUp = this.signUp.bind(this);
-  }
-
-  async signUp() {
-    this.setState({signUpModal: false});
-    await this.props.signUpUser({
-                          username: this.state.userName,
-                          password: this.state.password
-                          });
-    await this.props.loginUser({
-                          username: this.state.userName,
-                          password: this.state.password
-                        });
-    this.props.fetchIdeas();
-  }
-
-  handleUserName(e) {
-    this.setState({userName: e.target.value})
-  }
-
-  handlePassword(e) {
-    this.setState({password: e.target.value})
-  }
-
-  toggleSignUpModal() {
-    this.setState(prevState => ({
-      signUpModal: !prevState.signUpModal
-    }));
-  }
-  
   render() {
     return (
       <div>
@@ -153,40 +125,15 @@ export default class Header extends Component {
           <NavbarBrand href="/">Not My Idea</NavbarBrand>
           <CustomDropDown
             auth={this.props.auth}
+            fetchIdeas={this.props.fetchIdeas}
             fetchLikedIdeas={this.props.fetchLikedIdeas}
             fetchFlaggedIdeas={this.props.fetchFlaggedIdeas}
+            signUpUser={this.props.signUpUser}
             loginUser={this.props.loginUser}
             logoutUser={this.props.logoutUser}
             toggleSignUpModal={this.toggleSignUpModal}
           />
         </Navbar>
-        <Modal isOpen={this.state.signUpModal} toggle={this.toggleSignUpModal}>
-          <ModalHeader toggle={this.toggleSignUpModal}>Sign Up!</ModalHeader>
-          <ModalBody>
-          <Form className="px-3 py-3">
-                <FormGroup>
-                  <Input 
-                    type="text"
-                    value={this.state.userName}
-                    onChange={this.handleUserName}
-                    placeholder="Username"
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Input
-                    type="password"
-                    value={this.state.password}
-                    onChange={this.handlePassword}
-                    placeholder="Password" 
-                  />
-                </FormGroup>
-              </Form>
-          </ModalBody>
-          <ModalFooter>
-            <Button color="primary" onClick={this.signUp}>Sign Up</Button>{' '}
-            <Button color="secondary" onClick={this.toggleSignUpModal}>Cancel</Button>
-          </ModalFooter>
-        </Modal>
       </div>
     );
   }
