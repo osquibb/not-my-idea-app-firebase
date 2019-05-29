@@ -259,8 +259,13 @@ const addFlaggedIdeas = flaggedIdeaIds => (
     type: ActionTypes.ADD_FLAGGED_IDEAS,
     payload: flaggedIdeaIds
   }
-);      
+);
 
+const removeLikedAndFlaggedIdeas = () => (
+  {
+    type: ActionTypes.REMOVE_LIKED_AND_FLAGGED_IDEAS
+  }
+);
 
 // *** USER LOGIN ACTION CREATORS *** //
 
@@ -344,6 +349,7 @@ export const logoutUser = () => (dispatch) => {
   dispatch(requestLogout())
   localStorage.removeItem('token');
   localStorage.removeItem('creds');
+  dispatch(removeLikedAndFlaggedIdeas());
   dispatch(fetchIdeas());
   dispatch(receiveLogout());
 }

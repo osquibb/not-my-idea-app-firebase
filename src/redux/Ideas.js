@@ -57,6 +57,12 @@ export const Ideas = (state = {
         return {...state, 
                 likedIdeas: state.likedIdeas.concat(action.payload)
         };
+
+      case ActionTypes.REMOVE_LIKED_AND_FLAGGED_IDEAS:
+        return {...state,
+                likedIdeas: [],
+                flaggedIdeas: []
+        };
       
       default:
         return state;
