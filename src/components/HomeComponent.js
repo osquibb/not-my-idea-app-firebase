@@ -18,17 +18,25 @@ function Ideas(props) {
 	} else {
 		return props.ideas.map(idea => 
 		<ListGroupItem key={idea._id}>
-			<Row>
-				<Col xs="1" className="text-center">
-					<Button color="none" 
-									className={props.likedIdeas.indexOf(idea._id) !== -1
-														? "fas fa-lightbulb fa-2x"	
-														: "far fa-lightbulb fa-2x"}
-									onClick={() => props.postLikedIdeas([idea])}
-					/>
-					{idea.likedRank}
+			<Row className="align-items-center">
+				<Col xs="2" className="text-center">
+					<Row className="align-items-center">
+						<Col>
+							<div color="none" 
+											className={props.likedIdeas.indexOf(idea._id) !== -1
+																? "fas fa-lightbulb fa-2x"	
+																: "far fa-lightbulb fa-2x"}
+											onClick={() => props.postLikedIdeas([idea])}
+							/>
+						</Col>
+					</Row>
+					<Row>
+						<Col>
+							{idea.likedRank}
+						</Col>
+					</Row>	
 				</Col>
-				<Col xs="10">
+				<Col xs="8">
 					<ListGroupItemText>
 						{idea.text}
 					</ListGroupItemText>
@@ -36,7 +44,7 @@ function Ideas(props) {
 						Submitted by <strong>{idea.author}</strong> at <strong>{idea.createdAt}</strong>
 					</ListGroupItemText>
 				</Col>
-				<Col xs="1">
+				<Col xs="2" className="text-center">
 					<Button color="none"
 									style={{"font-size": "1.6rem"}} 
 									className={props.flaggedIdeas.indexOf(idea._id) !== -1
