@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import { Button, Col, Form, Input, Jumbotron, ListGroup, ListGroupItem } from 'reactstrap';
+import { Button, Row, Col, Form, Input, Jumbotron,
+				 ListGroup, ListGroupItem, ListGroupItemText } from 'reactstrap';
 import { Loading } from './LoadingComponent';
 
 function Ideas(props) {
@@ -16,21 +17,35 @@ function Ideas(props) {
 		);
 	} else {
 		return props.ideas.map(idea => 
-		<ListGroupItem key={idea._id} className="align-middle">
-		<Button color="none" 
-						className={props.likedIdeas.indexOf(idea._id) !== -1
-											 ? "fas fa-lightbulb fa-2x mr-3"	
-											 : "far fa-lightbulb fa-2x mr-3"}
-						onClick={() => props.postLikedIdeas([idea])}
-		/>
-		{idea.text} (rank: {idea.likedRank})
-		<Button color="none"
-						style={{"font-size": "1.6rem"}} 
-						className={props.flaggedIdeas.indexOf(idea._id) !== -1
-											 ? "fas fa-flag float-right text-warning"
-											 : "far fa-flag float-right text-warning"}					
-						onClick={() => props.postFlaggedIdeas([idea])}
-		/>			
+		<ListGroupItem key={idea._id}>
+			<Row>
+				<Col xs="1" className="text-center">
+					<Button color="none" 
+									className={props.likedIdeas.indexOf(idea._id) !== -1
+														? "fas fa-lightbulb fa-2x"	
+														: "far fa-lightbulb fa-2x"}
+									onClick={() => props.postLikedIdeas([idea])}
+					/>
+					{idea.likedRank}
+				</Col>
+				<Col xs="10">
+					<ListGroupItemText>
+						{idea.text}
+					</ListGroupItemText>
+					<ListGroupItemText style={{"font-size": ".8rem"}}>
+						Submitted by <strong>{idea.author}</strong> at <strong>{idea.createdAt}</strong>
+					</ListGroupItemText>
+				</Col>
+				<Col xs="1">
+					<Button color="none"
+									style={{"font-size": "1.6rem"}} 
+									className={props.flaggedIdeas.indexOf(idea._id) !== -1
+														? "fas fa-flag float-right text-warning"
+														: "far fa-flag float-right text-warning"}					
+									onClick={() => props.postFlaggedIdeas([idea])}
+					/>
+				</Col>
+			</Row>			
 		</ListGroupItem>);
 	}
 }

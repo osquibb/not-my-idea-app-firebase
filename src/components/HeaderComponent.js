@@ -54,7 +54,8 @@ class CustomDropDown extends Component {
         </DropdownToggle>
         <DropdownMenu right={true} className="mt-2">
           {this.props.auth.isAuthenticated ?
-            <Button 
+            <Button
+              className="px-3 py-3" 
               outline={true}
               onClick={this.logOut}
             >
