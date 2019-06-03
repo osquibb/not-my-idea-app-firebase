@@ -1,8 +1,7 @@
 import * as ActionTypes from './ActionTypes';
+import { auth, firestore, fireauth, firebasestore } from '../firebase/firebase';
 
-/* Action creator function
-args: 1 idea object
-returns action object.  fields: type and payload (which holds the 1 idea) */
+
 export const addIdea = idea => (
   {
     type: ActionTypes.ADD_IDEA,
@@ -10,9 +9,6 @@ export const addIdea = idea => (
   }
 );
 
-/* Action creator function
-args: An array of sorted ideas
-returns action object.  fields: type and payload (which holds sorted ideas array) */
 export const addSortedIdeas = ideas => {
   return(
     { type: ActionTypes.ADD_SORTED_IDEAS,
@@ -21,229 +17,166 @@ export const addSortedIdeas = ideas => {
   );
 };
 
-// Action creator function
-// returns an empty action (no payload) with type IDEAS_LOADING
 export const ideasLoading = () => (
   { type: ActionTypes.IDEAS_LOADING }
 );
 
-/* Action creator function
-args: An error message
-returns action object.  fields: type and payload (which holds the error message) */
 export const ideasFailed = errorMessage => (
   { type: ActionTypes.IDEAS_FAILED,
     payload: errorMessage
   }
 );
 
-/* Thunk action creator function (curried) which fetches Ideas from the server
-returns: a function that takes dispatch and (optionally)
-getState which returns an action object (created by either 
-addIdeas or ideasFailed). */
-export const fetchIdeas = () => dispatch => {
-  
-  dispatch(ideasLoading());
 
-  return fetch('/ideas')
-    .then(response => {
-      if (response.ok) {
-        return response;
-      }
-      else {
-        let error = new Error('Error ' + response.status
-                    + ': ' + response.statusText);
-        error.response = response;
-        throw error;
-      }
-    },
-    error => {
-      let errorMessage = new Error(error.message);
-      throw errorMessage;
-    })
-    .then(response => response.json())
-    .then(ideas => dispatch(addSortedIdeas(ideas)))
-    .catch(error => dispatch(ideasFailed(error.message)));
+export const fetchIdeas = () => dispatch => {
+  dispatch(ideasLoading());
+  
+  return firestore.collection('ideas').get()
+        .then(snapshot => {
+            let ideas = [];
+            snapshot.forEach(doc => {
+                const data = doc.data()
+                const _id = doc.id
+                ideas.push({_id, ...data });
+            });
+            return ideas;
+        })
+        .then(ideas => dispatch(addSortedIdeas(ideas)))
+        .catch(error => dispatch(ideasFailed(error.message)));
 };
 
-/* Thunk action creator function (curried) which posts 1 idea to the server
-args: 1 idea
-returns: a function that takes dispatch and (optionally)
-getState which returns an action object created by 
-addIdea or it calls alert() */
 export const postIdea = ideaText => dispatch => {
-  const newIdea = { text: ideaText };
-  const bearer = 'bearer ' + localStorage.getItem('token');
 
-  return fetch('/ideas', {
-    method: 'POST',
-    body: JSON.stringify(newIdea),  // post the 1 idea to the server
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': bearer
+  if (!auth.currentUser) {
+    console.log('No user logged in!');
+    return;
+  }
+
+  return firestore.collection('ideas').add({
+    text: ideaText,
+    author: {
+      '_id': auth.currentUser.uid,
+      'username' : auth.currentUser.displayName ? auth.currentUser.displayName : auth.currentUser.email
     },
-    credentials: 'same-origin'
+    likedRank: 0,
+    flaggedRank: 0,
+    createdAt: firebasestore.FieldValue.serverTimestamp(),
+    updatedAt: firebasestore.FieldValue.serverTimestamp()
   })
-    .then(response => {
-      if (response.ok) {
-        return response;
-      }
-      else {
-        let error = new Error('Error ' + response.status
-                    + ': ' + response.statusText);
-        error.response = response;
-        throw error;
-      }
-    },
-    error => {
-      let errorMessage = new Error(error.message);
-      throw errorMessage;
-    })
-    .then(response => response.json())
-    .then(idea => dispatch(addIdea(idea)))
-    .catch(error => alert('Error: ' + error.message));
+  .then(docRef => {
+      firestore.collection('ideas').doc(docRef.id).get()
+          .then(doc => {
+              if (doc.exists) {
+                  const data = doc.data();
+                  const _id = doc.id;
+                  let idea = {_id, ...data};
+                  dispatch(addIdea(idea))
+              } else {
+                  console.log("No such document!");
+              }
+          });
+  })
+  .catch(error => { console.log('Post Idea ', error.message);
+      alert('Your Idea could not be posted\nError: '+ error.message); })
 };
 
 export const fetchLikedIdeas = () => dispatch => {
 
-  const bearer = 'bearer ' + localStorage.getItem('token');
+  if (!auth.currentUser) {
+    console.log('No user logged in!');
+    return;
+  }
 
-  return fetch('/users/likedIdeas', {
-    headers: {
-      'Authorization': bearer
-    },
-  })
-  .then(response => {
-      if (response.ok) {
-          return response;
-      }
-      else {
-          let error = new Error('Error ' + response.status + ': ' + response.statusText);
-          error.response = response;
-          throw error;
-      }
-  },
-  error => {
-    let errorMessage = new Error(error.message);
-    throw errorMessage;
-  })
-  .then(response => response.json())
-  .then(ideas => dispatch(addLikedIdeas(ideas.map(idea => idea._id))))
-  .catch(error => dispatch(ideasFailed(error.message)));
-}
+  let user = auth.currentUser;
+
+  return firestore.collection('likedIdeas').where('user', '==', user.uid).get()
+    .then(snapshot => {
+        let likedIdeas = { user: user, ideas: []};
+        snapshot.forEach(doc => {
+            const data = doc.data()
+            likedIdeas.ideas.push(data.idea);
+        });
+        console.log(likedIdeas);
+        return likedIdeas;
+    })
+    .then(likedIdeas => dispatch(addLikedIdeas(likedIdeas)))
+    .catch(error => dispatch(ideasFailed(error.message)));
+};
 
 export const fetchFlaggedIdeas = () => dispatch => {
 
-  const bearer = 'bearer ' + localStorage.getItem('token');
+  if (!auth.currentUser) {
+    console.log('No user logged in!');
+    return;
+  }
 
-  return fetch('/users/flaggedIdeas', {
-    headers: {
-      'Authorization': bearer
-    },
+  let user = auth.currentUser;
+
+  return firestore.collection('flaggedIdeas').where('user', '==', user.uid).get()
+    .then(snapshot => {
+        let flaggedIdeas = { user: user, ideas: []};
+        snapshot.forEach(doc => {
+            const data = doc.data()
+            flaggedIdeas.ideas.push(data.idea);
+        });
+        console.log(flaggedIdeas);
+        return flaggedIdeas;
+    })
+    .then(flaggedIdeas => dispatch(addFlaggedIdeas(flaggedIdeas)))
+    .catch(error => dispatch(ideasFailed(error.message)));
+};
+
+export const postLikedIdea = ideaId => dispatch => {
+
+  if (!auth.currentUser) {
+    console.log('No user logged in!');
+    return;
+  }
+
+  return firestore.collection('likedIdeas').add({
+    user: auth.currentUser.uid,
+    idea: ideaId
   })
-  .then(response => {
-      if (response.ok) {
-          return response;
-      }
-      else {
-          let error = new Error('Error ' + response.status + ': ' + response.statusText);
-          error.response = response;
-          throw error;
-      }
-  },
-  error => {
-    let errorMessage = new Error(error.message);
-    throw errorMessage;
+  .then(docRef => {
+      firestore.collection('likedIdeas').doc(docRef.id).get()
+          .then(doc => {
+              if (doc.exists) {
+                  dispatch(fetchLikedIdeas());
+              } else {
+                  // doc.data() will be undefined in this case
+                  console.log("No such document!");
+              }
+          });
   })
-  .then(response => response.json())
-  .then(ideas => dispatch(addFlaggedIdeas(ideas.map(idea => idea._id))))
   .catch(error => dispatch(ideasFailed(error.message)));
-}
-
-/* Thunk action creator function (curried) which implemeents a
-POST request to like an array of ideas
-args: an array of ideas to like
-thunk: POST request
-returns: a function that takes dispatch and (optionally)
-getState which returns an action object created by updateIdea */
-export const postLikedIdeas = ideas => dispatch => {
-  const ideasToLike = ideas.map(idea => {
-    return({"_id": idea._id});
-  });
-  const bearer = 'bearer ' + localStorage.getItem('token');
-
-  return fetch(`/users/likedIdeas`, {
-    method: 'POST',
-    body: JSON.stringify(ideasToLike),
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': bearer
-    },
-    credentials: 'same-origin'
-  })
-  .then(response => {
-    if (response.ok) {
-      return response;
-    }
-    else {
-      let error = new Error('Error ' + response.status
-                  + ': ' + response.statusText);
-      error.response = response;
-      throw error;
-    }
-  },
-  error => {
-    let errorMessage = new Error(error.message);
-    throw errorMessage;
-  })
-  .then(response => response.json())
-  .then(ideaIds => dispatch(addLikedIdeas(ideaIds)))
-  .catch(error => alert('Error: ' + error.message));
 };
 
-/* Thunk action creator function (curried) which implemeents a
-POST request to flag an array of ideas
-args: an array of ideas to flag
-thunk: POST request
-returns: a function that takes dispatch and (optionally)
-getState which returns an action object created by updateIdea */
-export const postFlaggedIdeas = ideas => dispatch => {
-  const ideasToFlag = ideas.map(idea => {
-    return({"_id": idea._id});
-  });
-  const bearer = 'bearer ' + localStorage.getItem('token');
+export const postFlaggedIdea = ideaId => dispatch => {
+  
+  if (!auth.currentUser) {
+    console.log('No user logged in!');
+    return;
+  }
 
-  return fetch(`/users/flaggedIdeas`, {
-    method: 'POST',
-    body: JSON.stringify(ideasToFlag),
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': bearer
-    },
-    credentials: 'same-origin'
+  return firestore.collection('flaggedIdeas').add({
+    user: auth.currentUser.uid,
+    idea: ideaId
   })
-  .then(response => {
-    if (response.ok) {
-      return response;
-    }
-    else {
-      let error = new Error('Error ' + response.status
-                  + ': ' + response.statusText);
-      error.response = response;
-      throw error;
-    }
-  },
-  error => {
-    let errorMessage = new Error(error.message);
-    throw errorMessage;
+  .then(docRef => {
+      firestore.collection('flaggedIdeas').doc(docRef.id).get()
+          .then(doc => {
+              if (doc.exists) {
+                  dispatch(fetchFlaggedIdeas());
+              } else {
+                  // doc.data() will be undefined in this case
+                  console.log("No such document!");
+              }
+          });
   })
-  .then(response => response.json())
-  .then(ideaIds => dispatch(addFlaggedIdeas(ideaIds)))
-  .catch(error => alert('Error: ' + error.message));
+  .catch(error => dispatch(ideasFailed(error.message)));
 };
 
-/* Action creator function
-args: 1 array of ideas
-returns action object.  fields: type and payload (which update ideas) */
+
 const addLikedIdeas = likedIdeaIds => (
   {
     type: ActionTypes.ADD_LIKED_IDEAS,
@@ -251,9 +184,7 @@ const addLikedIdeas = likedIdeaIds => (
   }
 );      
 
-/* Action creator function
-args: 1 array of ideas
-returns action object.  fields: type and payload (which update ideas) */
+
 const addFlaggedIdeas = flaggedIdeaIds => (
   {
     type: ActionTypes.ADD_FLAGGED_IDEAS,
@@ -269,17 +200,16 @@ const removeLikedAndFlaggedIdeas = () => (
 
 // *** USER LOGIN ACTION CREATORS *** //
 
-const requestLogin = (creds) => {
+const requestLogin = () => {
   return {
-      type: ActionTypes.LOGIN_REQUEST,
-      creds
+      type: ActionTypes.LOGIN_REQUEST
   }
 }
 
-const receiveLogin = (response) => {
+const receiveLogin = (user) => {
   return {
       type: ActionTypes.LOGIN_SUCCESS,
-      token: response.token
+      user
   }
 }
 
@@ -290,46 +220,22 @@ const loginError = (message) => {
   }
 }
 
-// TODO: Update LoginUser to fetch likedIdeas and flaggedIdeas
-export const loginUser = creds => dispatch => {
-  // We dispatch requestLogin to kickoff the call to the API
-  dispatch(requestLogin(creds))
+export const loginUser = (creds) => dispatch => {
+  dispatch(requestLogin());
 
-  return fetch('/users/login', {
-      method: 'POST',
-      headers: { 
-          'Content-Type':'application/json' 
-      },
-      body: JSON.stringify(creds)
+  console.log(creds.email);
+  console.log(creds.password);
+
+  return auth.signInWithEmailAndPassword(creds.email, creds.password)
+  .then(() => {
+      let user = auth.currentUser;
+      localStorage.setItem('user', JSON.stringify(user));
+      // Dispatch the success action
+      dispatch(fetchLikedIdeas());
+      dispatch(fetchFlaggedIdeas());
+      dispatch(receiveLogin(user));
   })
-  .then(response => {
-      if (response.ok) {
-          return response;
-      } else {
-          var error = new Error('Error ' + response.status + ': ' + response.statusText);
-          error.response = response;
-          throw error;
-      }
-      },
-      error => {
-          throw error;
-      })
-  .then(response => response.json())
-  .then(response => {
-      if (response.success) {
-          // If login was successful, set the token in local storage
-          localStorage.setItem('token', response.token);
-          localStorage.setItem('creds', JSON.stringify(creds));
-          // Dispatch the success action
-          dispatch(receiveLogin(response));
-      }
-      else {
-          var error = new Error('Error ' + response.status);
-          error.response = response;
-          throw error;
-      }
-  })
-  .catch(error => dispatch(loginError(error.message)))
+  .catch(error => dispatch(loginError(error.message)));
 };
 
 const requestLogout = () => {
@@ -346,15 +252,18 @@ const receiveLogout = () => {
 
 // Logs the user out
 export const logoutUser = () => dispatch => {
-  dispatch(requestLogout())
-  localStorage.removeItem('token');
-  localStorage.removeItem('creds');
-  dispatch(removeLikedAndFlaggedIdeas());
-  dispatch(fetchIdeas());
-  dispatch(receiveLogout());
-}
+  dispatch(requestLogout());
 
-// TODO: Complete all signup action types and actions...
+  auth.signOut().then(() => {
+    // Sign-out successful.
+  }).catch((error) => {
+    // An error happened.
+  });
+  localStorage.removeItem('user');
+  dispatch(removeLikedAndFlaggedIdeas());
+  dispatch(receiveLogout());
+  
+}
 
 const requestSignUp = () => {
   return {
@@ -378,36 +287,24 @@ const signUpError = (message) => {
 export const signUpUser = creds => dispatch => {
   dispatch(requestSignUp());
 
-  return fetch('/users/signup', {
-      method: 'POST',
-      headers: { 
-          'Content-Type':'application/json' 
-      },
-      body: JSON.stringify(creds)
-  })
-  .then(response => {
-      if (response.ok) {
-          return response;
-      } else {
-          var error = new Error('Error ' + response.status + ': ' + response.statusText);
-          error.response = response;
-          throw error;
-      }
-      },
-      error => {
-          throw error;
-      })
-  .then(response => response.json())
-  .then(response => {
-      if (response.success) {
-          // Dispatch the success action
-          dispatch(receiveSignUp(response));
-      }
-      else {
-          var error = new Error('Error ' + response.status);
-          error.response = response;
-          throw error;
-      }
-  })
-  .catch(error => dispatch(signUpError(error.message)))
-};
+  auth.createUserWithEmailAndPassword(creds.email, creds.password)
+  .then(response => dispatch(receiveSignUp(response)))
+  .catch(error => dispatch(signUpError(error.message)));
+
+}
+
+// export const googleLogin = () => (dispatch) => {
+//   const provider = new fireauth.GoogleAuthProvider();
+
+//   auth.signInWithPopup(provider)
+//       .then((result) => {
+//           var user = result.user;
+//           localStorage.setItem('user', JSON.stringify(user));
+//           // Dispatch the success action
+//           dispatch(fetchFavorites());
+//           dispatch(receiveLogin(user));
+//       })
+//       .catch((error) => {
+//           dispatch(loginError(error.message));
+//       });
+// }

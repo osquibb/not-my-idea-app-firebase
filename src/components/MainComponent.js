@@ -5,8 +5,8 @@ import Footer from './FooterComponent';
 import { Container } from 'reactstrap';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { fetchIdeas, addSortedIdeas, postIdea, postLikedIdeas,
-				 postFlaggedIdeas, fetchLikedIdeas, fetchFlaggedIdeas,
+import { fetchIdeas, addSortedIdeas, postIdea, postLikedIdea,
+				 postFlaggedIdea, fetchLikedIdeas, fetchFlaggedIdeas,
 				 loginUser, logoutUser, signUpUser } from '../redux/ActionCreators';
 
 // map store state to props
@@ -25,8 +25,8 @@ const mapDispatchToProps = dispatch => ({
 	fetchFlaggedIdeas: () => dispatch(fetchFlaggedIdeas()),
 	addSortedIdeas: ideas => dispatch(addSortedIdeas(ideas)),
 	postIdea: idea => dispatch(postIdea(idea)),
-	postLikedIdeas: ideas => dispatch(postLikedIdeas(ideas)),
-	postFlaggedIdeas: ideas => dispatch(postFlaggedIdeas(ideas)),
+	postLikedIdea: ideaId => dispatch(postLikedIdea(ideaId)),
+	postFlaggedIdea: ideaId => dispatch(postFlaggedIdea(ideaId)),
 	loginUser: creds => dispatch(loginUser(creds)),
 	logoutUser: () => dispatch(logoutUser()),
 	signUpUser: creds => dispatch(signUpUser(creds)) 
@@ -81,8 +81,8 @@ class Main extends Component {
 																	flaggedIdeas={this.props.ideas.flaggedIdeas}
 																	auth={this.props.auth}
 																	postIdea={this.props.postIdea}
-																	postFlaggedIdeas={this.props.postFlaggedIdeas}
-																	postLikedIdeas={this.props.postLikedIdeas}
+																	postFlaggedIdea={this.props.postFlaggedIdea}
+																	postLikedIdea={this.props.postLikedIdea}
 																	ideasLoading={this.props.ideas.isLoading}
 																	ideasErrorMessage={this.props.ideas.errorMessage}
 														/>}

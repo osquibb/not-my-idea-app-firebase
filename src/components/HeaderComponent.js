@@ -7,11 +7,11 @@ class CustomDropDown extends Component {
     super(props);
     this.state = {
       dropdownOpen: false,
-      userName: '',
+      email: '',
       password: ''
     };
     this.toggleDropDown = this.toggleDropDown.bind(this);
-    this.handleUserName = this.handleUserName.bind(this);
+    this.handleEmail = this.handleEmail.bind(this);
     this.handlePassword = this.handlePassword.bind(this);
     this.logIn = this.logIn.bind(this);
     this.logOut = this.logOut.bind(this);
@@ -27,7 +27,7 @@ class CustomDropDown extends Component {
   async logIn() {
     this.setState({dropdownOpen: false});
     await this.props.loginUser({
-                          username: this.state.userName,
+                          email: this.state.email,
                           password: this.state.password
                         });
     this.props.fetchLikedIdeas();
@@ -37,11 +37,11 @@ class CustomDropDown extends Component {
   async signUp() {
     this.setState({signUpModal: false});
     await this.props.signUpUser({
-                          username: this.state.userName,
+                          email: this.state.email,
                           password: this.state.password
                           });
     await this.props.loginUser({
-                          username: this.state.userName,
+                          email: this.state.email,
                           password: this.state.password
                         });
     this.props.fetchIdeas();
@@ -52,8 +52,8 @@ class CustomDropDown extends Component {
     this.setState({dropdownOpen: false});
   }
 
-  handleUserName(e) {
-    this.setState({userName: e.target.value})
+  handleEmail(e) {
+    this.setState({email: e.target.value})
   }
 
   handlePassword(e) {
@@ -64,7 +64,7 @@ class CustomDropDown extends Component {
     return(
       <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropDown}>
         <DropdownToggle caret>
-          {this.props.auth.isAuthenticated ? this.props.auth.user.username : 'Sign Up / Log In'}
+          {this.props.auth.isAuthenticated ? this.props.auth.user.email : 'Sign Up / Log In'}
         </DropdownToggle>
         <DropdownMenu right={true} className="mt-2">
           {this.props.auth.isAuthenticated ?
@@ -85,9 +85,9 @@ class CustomDropDown extends Component {
                 <FormGroup>
                   <Input 
                     type="text"
-                    value={this.state.userName}
-                    onChange={this.handleUserName}
-                    placeholder="Username"
+                    value={this.state.email}
+                    onChange={this.handleEmail}
+                    placeholder="Email"
                   />
                 </FormGroup>
                 <FormGroup>

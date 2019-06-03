@@ -26,7 +26,7 @@ function Ideas(props) {
 											className={props.likedIdeas.indexOf(idea._id) !== -1
 																? "fas fa-lightbulb fa-2x"	
 																: "far fa-lightbulb fa-2x"}
-											onClick={() => props.postLikedIdeas([idea])}
+											onClick={() => props.postLikedIdea(idea._id)}
 							/>
 						</Col>
 					</Row>
@@ -41,7 +41,7 @@ function Ideas(props) {
 						{idea.text}
 					</ListGroupItemText>
 					<ListGroupItemText style={{"fontSize": ".75rem"}}>
-						Submitted by <strong>{idea.author.username}</strong> on <strong>{new Date(idea.createdAt).toDateString()}</strong>
+						Submitted by <strong> username here</strong> on <strong> date here </strong>
 					</ListGroupItemText>
 				</Col>
 
@@ -51,7 +51,7 @@ function Ideas(props) {
 									className={props.flaggedIdeas.indexOf(idea._id) !== -1
 														? "fas fa-flag float-right text-warning"
 														: "far fa-flag float-right text-warning"}					
-									onClick={() => props.postFlaggedIdeas([idea])}
+									onClick={() => props.postFlaggedIdea(idea._id)}
 					/>
 				</Col>
 			</Row>			
@@ -106,8 +106,8 @@ export default class Home extends Component {
 								ideas={this.props.ideas}
 								likedIdeas={this.props.likedIdeas}
 								flaggedIdeas={this.props.flaggedIdeas}
-								postLikedIdeas={this.props.postLikedIdeas}
-								postFlaggedIdeas={this.props.postFlaggedIdeas}
+								postLikedIdea={this.props.postLikedIdea}
+								postFlaggedIdea={this.props.postFlaggedIdea}
 								isLoading={this.props.ideasLoading}
 								errorMessage={this.props.ideasErrorMessage}
 							/>
