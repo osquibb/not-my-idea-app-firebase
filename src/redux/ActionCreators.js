@@ -422,21 +422,21 @@ export const signUpUser = creds => dispatch => {
   auth.createUserWithEmailAndPassword(creds.email, creds.password)
   .then(response => dispatch(receiveSignUp(response)))
   .catch(error => dispatch(signUpError(error.message)));
-
 }
 
-// export const googleLogin = () => (dispatch) => {
-//   const provider = new fireauth.GoogleAuthProvider();
+export const googleLogin = () => (dispatch) => {
+  const provider = new fireauth.GoogleAuthProvider();
 
-//   auth.signInWithPopup(provider)
-//       .then((result) => {
-//           var user = result.user;
-//           localStorage.setItem('user', JSON.stringify(user));
-//           // Dispatch the success action
-//           dispatch(fetchFavorites());
-//           dispatch(receiveLogin(user));
-//       })
-//       .catch((error) => {
-//           dispatch(loginError(error.message));
-//       });
-// }
+  auth.signInWithPopup(provider)
+      .then((result) => {
+          let user = result.user;
+          localStorage.setItem('user', JSON.stringify(user));
+          // Dispatch the success action
+          dispatch(fetchLikedIdeas());
+          dispatch(fetchFlaggedIdeas());
+          dispatch(receiveLogin(user));
+      })
+      .catch((error) => {
+          dispatch(loginError(error.message));
+      });
+}

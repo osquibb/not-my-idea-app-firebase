@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import { Button, Row, Col, Form, Input, Jumbotron,
 				 ListGroup, ListGroupItem, ListGroupItemText } from 'reactstrap';
 import { Loading } from './LoadingComponent';
-import { auth } from 'firebase';
 
 function Ideas(props) {
 

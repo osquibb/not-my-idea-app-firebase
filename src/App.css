@@ -3,3 +3,7 @@
   overflow: scroll;
   padding: 0;
 }
+
+#google-sign-in:hover {
+  cursor: pointer;
+}
