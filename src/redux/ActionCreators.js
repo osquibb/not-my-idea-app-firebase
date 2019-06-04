@@ -91,15 +91,14 @@ export const fetchLikedIdeas = () => dispatch => {
 
   return firestore.collection('likedIdeas').where('user', '==', user.uid).get()
     .then(snapshot => {
-        let likedIdeas = { user: user, ideas: []};
+        let likedIdeaIds = [];
         snapshot.forEach(doc => {
             const data = doc.data()
-            likedIdeas.ideas.push(data.idea);
+            likedIdeaIds.push(data.ideaId);
         });
-        console.log(likedIdeas);
-        return likedIdeas;
+        return likedIdeaIds;
     })
-    .then(likedIdeas => dispatch(addLikedIdeas(likedIdeas)))
+    .then(likedIdeaIds => dispatch(addLikedIdeas(likedIdeaIds)))
     .catch(error => dispatch(ideasFailed(error.message)));
 };
 
@@ -114,15 +113,14 @@ export const fetchFlaggedIdeas = () => dispatch => {
 
   return firestore.collection('flaggedIdeas').where('user', '==', user.uid).get()
     .then(snapshot => {
-        let flaggedIdeas = { user: user, ideas: []};
+        let flaggedIdeaIds = [];
         snapshot.forEach(doc => {
             const data = doc.data()
-            flaggedIdeas.ideas.push(data.idea);
+            flaggedIdeaIds.push(data.ideaId);
         });
-        console.log(flaggedIdeas);
-        return flaggedIdeas;
+        return flaggedIdeaIds;
     })
-    .then(flaggedIdeas => dispatch(addFlaggedIdeas(flaggedIdeas)))
+    .then(flaggedIdeaIds => dispatch(addFlaggedIdeas(flaggedIdeaIds)))
     .catch(error => dispatch(ideasFailed(error.message)));
 };
 
@@ -135,7 +133,7 @@ export const postLikedIdea = ideaId => dispatch => {
 
   return firestore.collection('likedIdeas').add({
     user: auth.currentUser.uid,
-    idea: ideaId
+    ideaId: ideaId
   })
   .then(docRef => {
       firestore.collection('likedIdeas').doc(docRef.id).get()
@@ -222,9 +220,6 @@ const loginError = (message) => {
 
 export const loginUser = (creds) => dispatch => {
   dispatch(requestLogin());
-
-  console.log(creds.email);
-  console.log(creds.password);
 
   return auth.signInWithEmailAndPassword(creds.email, creds.password)
   .then(() => {

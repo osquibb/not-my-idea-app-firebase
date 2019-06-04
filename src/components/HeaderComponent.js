@@ -30,8 +30,6 @@ class CustomDropDown extends Component {
                           email: this.state.email,
                           password: this.state.password
                         });
-    this.props.fetchLikedIdeas();
-    this.props.fetchFlaggedIdeas();
   }
 
   async signUp() {
