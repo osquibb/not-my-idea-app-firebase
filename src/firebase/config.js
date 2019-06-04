@@ -1,5 +1,5 @@
 export const config = {
-  apiKey: "AIzaSyBfYW73Yh6nZwiJtYO62KHP6vnP7gJDm7w",
+  apiKey: "",
   authDomain: "notmyideaserver.firebaseapp.com",
   databaseURL: "https://notmyideaserver.firebaseio.com",
   projectId: "notmyideaserver",
