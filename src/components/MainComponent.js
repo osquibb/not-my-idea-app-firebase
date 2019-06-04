@@ -6,8 +6,8 @@ import { Container } from 'reactstrap';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchIdeas, addSortedIdeas, postIdea, postLikedIdea,
-				 postFlaggedIdea, fetchLikedIdeas, fetchFlaggedIdeas,
-				 loginUser, logoutUser, signUpUser } from '../redux/ActionCreators';
+				 postFlaggedIdea, deleteLikedIdea, deleteFlaggedIdea, fetchLikedIdeas,
+				 fetchFlaggedIdeas, loginUser, logoutUser, signUpUser } from '../redux/ActionCreators';
 
 // map store state to props
 // each field contains a state
@@ -27,6 +27,8 @@ const mapDispatchToProps = dispatch => ({
 	postIdea: idea => dispatch(postIdea(idea)),
 	postLikedIdea: ideaId => dispatch(postLikedIdea(ideaId)),
 	postFlaggedIdea: ideaId => dispatch(postFlaggedIdea(ideaId)),
+	deleteLikedIdea: ideaId => dispatch(deleteLikedIdea(ideaId)),
+	deleteFlaggedIdea: ideaId => dispatch(deleteFlaggedIdea(ideaId)),
 	loginUser: creds => dispatch(loginUser(creds)),
 	logoutUser: () => dispatch(logoutUser()),
 	signUpUser: creds => dispatch(signUpUser(creds)) 
@@ -83,6 +85,8 @@ class Main extends Component {
 																	postIdea={this.props.postIdea}
 																	postFlaggedIdea={this.props.postFlaggedIdea}
 																	postLikedIdea={this.props.postLikedIdea}
+																	deleteLikedIdea={this.props.deleteLikedIdea}
+																	deleteFlaggedIdea={this.props.deleteFlaggedIdea}
 																	ideasLoading={this.props.ideas.isLoading}
 																	ideasErrorMessage={this.props.ideas.errorMessage}
 														/>}

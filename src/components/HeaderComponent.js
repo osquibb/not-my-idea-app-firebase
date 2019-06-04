@@ -38,6 +38,11 @@ class CustomDropDown extends Component {
                           email: this.state.email,
                           password: this.state.password
                           });
+    await this.props.loginUser({
+              email: this.state.email,
+              password: this.state.password
+    });
+    
   }
 
   logOut() {

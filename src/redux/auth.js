@@ -6,6 +6,7 @@ import * as ActionTypes from './ActionTypes';
 export const Auth = (state = {
         isLoading: false,
         isAuthenticated: false,
+        isSignedUp: false,
         user: null,
         errMess: null
     }, action) => {
@@ -41,17 +42,19 @@ export const Auth = (state = {
             };
         case ActionTypes.SIGN_UP_REQUEST:
                 return {...state,
-                    isLoading: true
+                    isLoading: true,
+                    isSignedUp: false
                 };
             case ActionTypes.SIGN_UP_SUCCESS:
                 return {...state,
                     isLoading: false,
-                    isAuthenticated: true
+                    isSignedUp: true
                 };
             case ActionTypes.SIGN_UP_FAILURE:
                 return {...state,
                     isLoading: false,
-                    errMess: action.message
+                    isSignedUp: false,
+                    errMess: action.message  
                 };
 
         default:

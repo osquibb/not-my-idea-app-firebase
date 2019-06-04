@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { Button, Row, Col, Form, Input, Jumbotron,
 				 ListGroup, ListGroupItem, ListGroupItemText } from 'reactstrap';
 import { Loading } from './LoadingComponent';
+import { auth } from 'firebase';
 
 function Ideas(props) {
 
@@ -26,7 +27,14 @@ function Ideas(props) {
 											className={props.likedIdeas.indexOf(idea._id) !== -1
 																? "fas fa-lightbulb fa-2x"	
 																: "far fa-lightbulb fa-2x"}
-											onClick={() => props.postLikedIdea(idea._id)}
+											onClick={() =>{
+												if (props.likedIdeas.indexOf(idea._id) === -1) {
+													props.postLikedIdea(idea._id);
+												}
+												else {
+													props.deleteLikedIdea(idea._id);
+												}
+											}}
 							/>
 						</Col>
 					</Row>
@@ -41,7 +49,7 @@ function Ideas(props) {
 						{idea.text}
 					</ListGroupItemText>
 					<ListGroupItemText style={{"fontSize": ".75rem"}}>
-						Submitted by <strong> username here</strong> on <strong> date here </strong>
+						Submitted by <strong>{idea.author.username}</strong> at <strong>{Date(idea.createdAt)}</strong>
 					</ListGroupItemText>
 				</Col>
 
@@ -51,7 +59,14 @@ function Ideas(props) {
 									className={props.flaggedIdeas.indexOf(idea._id) !== -1
 														? "fas fa-flag float-right text-warning"
 														: "far fa-flag float-right text-warning"}					
-									onClick={() => props.postFlaggedIdea(idea._id)}
+									onClick={() =>{
+										if (props.flaggedIdeas.indexOf(idea._id) === -1) {
+											props.postFlaggedIdea(idea._id);
+										}
+										else {
+											props.deleteFlaggedIdea(idea._id);
+										}
+									}}
 					/>
 				</Col>
 			</Row>			
@@ -108,6 +123,8 @@ export default class Home extends Component {
 								flaggedIdeas={this.props.flaggedIdeas}
 								postLikedIdea={this.props.postLikedIdea}
 								postFlaggedIdea={this.props.postFlaggedIdea}
+								deleteLikedIdea={this.props.deleteLikedIdea}
+								deleteFlaggedIdea={this.props.deleteFlaggedIdea}
 								isLoading={this.props.ideasLoading}
 								errorMessage={this.props.ideasErrorMessage}
 							/>

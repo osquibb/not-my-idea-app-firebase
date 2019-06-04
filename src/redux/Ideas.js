@@ -58,6 +58,11 @@ export const Ideas = (state = {
                 likedIdeas: state.likedIdeas.concat(action.payload)
         };
 
+      case ActionTypes.REMOVE_FLAGGED_IDEA:
+      return {...state, 
+              flaggedIdeas: state.flaggedIdeas.filter(flaggedIdeaId => flaggedIdeaId !== action.payload)
+      };
+
       case ActionTypes.REMOVE_LIKED_AND_FLAGGED_IDEAS:
         return {...state,
                 likedIdeas: [],

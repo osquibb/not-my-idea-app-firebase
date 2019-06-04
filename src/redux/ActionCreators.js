@@ -1,33 +1,6 @@
 import * as ActionTypes from './ActionTypes';
 import { auth, firestore, fireauth, firebasestore } from '../firebase/firebase';
 
-
-export const addIdea = idea => (
-  {
-    type: ActionTypes.ADD_IDEA,
-    payload: idea
-  }
-);
-
-export const addSortedIdeas = ideas => {
-  return(
-    { type: ActionTypes.ADD_SORTED_IDEAS,
-      payload: ideas.sort((a,b) => a.likedRank > b.likedRank ? -1 : 1)
-    }
-  );
-};
-
-export const ideasLoading = () => (
-  { type: ActionTypes.IDEAS_LOADING }
-);
-
-export const ideasFailed = errorMessage => (
-  { type: ActionTypes.IDEAS_FAILED,
-    payload: errorMessage
-  }
-);
-
-
 export const fetchIdeas = () => dispatch => {
   dispatch(ideasLoading());
   
@@ -139,6 +112,7 @@ export const postLikedIdea = ideaId => dispatch => {
       firestore.collection('likedIdeas').doc(docRef.id).get()
           .then(doc => {
               if (doc.exists) {
+                  dispatch(incrementLikedRank(ideaId));
                   dispatch(fetchLikedIdeas());
               } else {
                   // doc.data() will be undefined in this case
@@ -147,6 +121,49 @@ export const postLikedIdea = ideaId => dispatch => {
           });
   })
   .catch(error => dispatch(ideasFailed(error.message)));
+};
+
+export const deleteLikedIdea = ideaId => dispatch => {
+
+  if (!auth.currentUser) {
+    console.log('No user logged in!');
+    return;
+  }
+
+  let user = auth.currentUser;
+
+  return firestore.collection('likedIdeas').where('user', '==', user.uid).where('ideaId', '==', ideaId).get()
+  .then(snapshot => {
+      snapshot.forEach(doc => {
+          firestore.collection('likedIdeas').doc(doc.id).delete()
+          .then(() => {
+              dispatch(decrementLikedRank(ideaId));
+              dispatch(removeLikedIdea(doc.data().ideaId));
+          })
+      });
+  })
+  .catch(error => dispatch(ideasFailed(error.message)));
+};
+
+export const deleteFlaggedIdea = ideaId => dispatch => {
+  if (!auth.currentUser) {
+    console.log('No user logged in!');
+    return;
+  }
+
+let user = auth.currentUser;
+
+return firestore.collection('flaggedIdeas').where('user', '==', user.uid).where('ideaId', '==', ideaId).get()
+.then(snapshot => {
+    snapshot.forEach(doc => {
+        firestore.collection('flaggedIdeas').doc(doc.id).delete()
+        .then(() => {
+            dispatch(decrementFlaggedRank(ideaId))
+            dispatch(removeFlaggedIdea(doc.data().ideaId));
+        })
+    });
+})
+.catch(error => dispatch(ideasFailed(error.message)));
 };
 
 export const postFlaggedIdea = ideaId => dispatch => {
@@ -164,6 +181,7 @@ export const postFlaggedIdea = ideaId => dispatch => {
       firestore.collection('flaggedIdeas').doc(docRef.id).get()
           .then(doc => {
               if (doc.exists) {
+                  dispatch(incrementFlaggedRank(ideaId));
                   dispatch(fetchFlaggedIdeas());
               } else {
                   // doc.data() will be undefined in this case
@@ -174,14 +192,133 @@ export const postFlaggedIdea = ideaId => dispatch => {
   .catch(error => dispatch(ideasFailed(error.message)));
 };
 
+const incrementLikedRank = ideaId => dispatch => {
+  
+  if (!auth.currentUser) {
+    console.log('No user logged in!');
+    return;
+  }
+
+  return firestore.collection('ideas').doc(ideaId).get()
+  .then(doc => {
+    if (doc.exists) {
+      const incrementedLikedRank = doc.data().likedRank + 1;
+      firestore.collection('ideas').doc(ideaId).update({likedRank: incrementedLikedRank});
+    }
+  })
+  .catch(error => dispatch(ideasFailed(error.message)));
+};
+
+const decrementLikedRank = ideaId => dispatch => {
+  
+  if (!auth.currentUser) {
+    console.log('No user logged in!');
+    return;
+  }
+
+  return firestore.collection('ideas').doc(ideaId).get()
+  .then(doc => {
+    if (doc.exists) {
+      const decrementedLikedRank = doc.data().likedRank - 1;
+      firestore.collection('ideas').doc(ideaId).update({likedRank: decrementedLikedRank});
+    }
+  })
+  .catch(error => dispatch(ideasFailed(error.message)));
+};
+
+const decrementFlaggedRank = ideaId => dispatch => {
+  
+  if (!auth.currentUser) {
+    console.log('No user logged in!');
+    return;
+  }
+
+  return firestore.collection('ideas').doc(ideaId).get()
+  .then(doc => {
+    if (doc.exists) {
+      const decrementedFlaggedRank = doc.data().flaggedRank - 1;
+      firestore.collection('ideas').doc(ideaId).update({flaggedRank: decrementedFlaggedRank});
+    }
+  })
+  .catch(error => dispatch(ideasFailed(error.message)));
+};
+
+const incrementFlaggedRank = ideaId => dispatch => {
+  
+  if (!auth.currentUser) {
+    console.log('No user logged in!');
+    return;
+  }
+
+  return firestore.collection('ideas').doc(ideaId).get()
+  .then(doc => {
+    if (doc.exists) {
+      const incrementedFlaggedRank = doc.data().flaggedRank + 1;
+      firestore.collection('ideas').doc(ideaId).update({flaggedRank: incrementedFlaggedRank});
+    }
+  })
+  .catch(error => dispatch(ideasFailed(error.message)));
+};
+
+export const addSortedIdeas = ideas => {
+  return(
+    { type: ActionTypes.ADD_SORTED_IDEAS,
+      payload: ideas.sort((a,b) => a.likedRank > b.likedRank ? -1 : 1)
+    }
+  );
+};
+
+const addIdea = idea => (
+  {
+    type: ActionTypes.ADD_IDEA,
+    payload: idea
+  }
+);
+
+const ideasLoading = () => (
+  { type: ActionTypes.IDEAS_LOADING }
+);
+
+const ideasFailed = errorMessage => (
+  { type: ActionTypes.IDEAS_FAILED,
+    payload: errorMessage
+  }
+);
 
 const addLikedIdeas = likedIdeaIds => (
   {
     type: ActionTypes.ADD_LIKED_IDEAS,
     payload: likedIdeaIds
   }
-);      
+);
 
+const removeLikedIdea = likedIdeaId => (
+  {
+    type: ActionTypes.REMOVE_LIKED_IDEA,
+    payload: likedIdeaId
+  }
+);
+
+// const changeLikedRank = newLikedRank => (
+//   {
+//     type: ActionTypes.CHANGE_LIKED_RANK,
+//     payload: newLikedRank
+//   }
+// );
+
+// const changeFlaggedRank = newFlaggedRank => (
+//   {
+//     type: ActionTypes.CHANGE_FLAGGED_RANK,
+//     payload: newFlaggedRank
+//   }
+// );
+
+const removeFlaggedIdea = flaggedIdeaId => (
+  {
+    type: ActionTypes.REMOVE_FLAGGED_IDEA,
+    payload: flaggedIdeaId
+  }
+);
 
 const addFlaggedIdeas = flaggedIdeaIds => (
   {
