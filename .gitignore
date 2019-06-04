@@ -11,9 +11,9 @@
 # production
 /build
 
-# temp server
-json-server/db.json
 
+# firebase config
+/firebase/config.js
 
 # Notes
 NOTES.md
