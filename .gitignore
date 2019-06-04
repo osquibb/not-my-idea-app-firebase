@@ -13,7 +13,7 @@
 
 
 # firebase config
-/firebase/config.js
+/src/firebase/config.js
 
 # Notes
 NOTES.md
