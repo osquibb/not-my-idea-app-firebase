@@ -158,7 +158,7 @@ export const postFlaggedIdea = ideaId => dispatch => {
 
   return firestore.collection('flaggedIdeas').add({
     user: auth.currentUser.uid,
-    idea: ideaId
+    ideaId: ideaId
   })
   .then(docRef => {
       firestore.collection('flaggedIdeas').doc(docRef.id).get()
