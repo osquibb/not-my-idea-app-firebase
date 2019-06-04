@@ -203,7 +203,8 @@ const incrementLikedRank = ideaId => dispatch => {
   .then(doc => {
     if (doc.exists) {
       const incrementedLikedRank = doc.data().likedRank + 1;
-      firestore.collection('ideas').doc(ideaId).update({likedRank: incrementedLikedRank});
+      firestore.collection('ideas').doc(ideaId).update({likedRank: incrementedLikedRank})
+      .then(() => dispatch(changeLikedRank(ideaId, incrementedLikedRank)));
     }
   })
   .catch(error => dispatch(ideasFailed(error.message)));
@@ -299,12 +300,14 @@ const removeLikedIdea = likedIdeaId => (
   }
 );
 
-// const changeLikedRank = newLikedRank => (
-//   {
-//     type: ActionTypes.CHANGE_LIKED_RANK,
-//     payload: newLikedRank
-//   }
-// );
+const changeLikedRank = (ideaId, newLikedRank) => (
+  {
+    type: ActionTypes.CHANGE_LIKED_RANK,
+    id: ideaId,
+    payload: newLikedRank
+  }
+);
+  
 
 // const changeFlaggedRank = newFlaggedRank => (
 //   {

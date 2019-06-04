@@ -1,5 +1,6 @@
 import * as ActionTypes from './ActionTypes';
 
+
 // IDEAS REDUCER
 // args: original state + action (object created by ActionCreator)
 // returns: new state (NOT MUTATED ORIGINAL) with changes
@@ -59,9 +60,19 @@ export const Ideas = (state = {
         };
 
       case ActionTypes.REMOVE_FLAGGED_IDEA:
-      return {...state, 
+        return {...state, 
               flaggedIdeas: state.flaggedIdeas.filter(flaggedIdeaId => flaggedIdeaId !== action.payload)
-      };
+        };
+
+      case ActionTypes.CHANGE_LIKED_RANK:
+        const ideas = [...state.ideas];
+        for (let i=0; i < ideas.length; i++) {
+          if (ideas[i]._id === action.id) {
+            ideas[i].likedRank = action.payload;
+          }
+        }
+
+        return {...state, ideas: ideas};
 
       case ActionTypes.REMOVE_LIKED_AND_FLAGGED_IDEAS:
         return {...state,
