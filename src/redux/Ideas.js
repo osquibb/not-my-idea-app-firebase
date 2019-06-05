@@ -64,15 +64,31 @@ export const Ideas = (state = {
               flaggedIdeas: state.flaggedIdeas.filter(flaggedIdeaId => flaggedIdeaId !== action.payload)
         };
 
+      case ActionTypes.REMOVE_LIKED_IDEA:
+        return {...state, 
+              likedIdeas: state.likedIdeas.filter(likedIdeaId => likedIdeaId !== action.payload)
+        };
+
       case ActionTypes.CHANGE_LIKED_RANK:
-        const ideas = [...state.ideas];
-        for (let i=0; i < ideas.length; i++) {
-          if (ideas[i]._id === action.id) {
-            ideas[i].likedRank = action.payload;
+        const newLikedRankideas = [...state.ideas];
+        for (let i=0; i < newLikedRankideas.length; i++) {
+          if (newLikedRankideas[i]._id === action.payload.ideaId) {
+            newLikedRankideas[i].likedRank = action.payload.newLikedRank;
           }
         }
 
-        return {...state, ideas: ideas};
+        return {...state, ideas: newLikedRankideas};
+
+      case ActionTypes.CHANGE_FLAGGED_RANK:
+        const newFlaggedRankIdeas = [...state.ideas];
+        for (let i=0; i < newFlaggedRankIdeas.length; i++) {
+          if (newFlaggedRankIdeas[i]._id === action.payload.ideaId) {
+            newFlaggedRankIdeas[i].flaggedRank = action.payload.newFlaggedRank;
+          }
+        }
+
+        return {...state, ideas: newFlaggedRankIdeas};
+      
 
       case ActionTypes.REMOVE_LIKED_AND_FLAGGED_IDEAS:
         return {...state,

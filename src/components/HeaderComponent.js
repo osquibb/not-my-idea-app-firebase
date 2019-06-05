@@ -22,12 +22,6 @@ class CustomDropDown extends Component {
     this.logOut = this.logOut.bind(this);
   }
 
-  toggleDropDown() {
-    this.setState(state => ({
-      dropdownOpen: !state.dropdownOpen
-    }));
-  }
-
   async logIn() {
     this.setState({dropdownOpen: false});
     await this.props.loginUser({

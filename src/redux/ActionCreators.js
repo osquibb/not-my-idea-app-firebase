@@ -97,6 +97,7 @@ export const fetchFlaggedIdeas = () => dispatch => {
     .catch(error => dispatch(ideasFailed(error.message)));
 };
 
+// TODO: test
 export const postLikedIdea = ideaId => dispatch => {
 
   if (!auth.currentUser) {
@@ -104,25 +105,55 @@ export const postLikedIdea = ideaId => dispatch => {
     return;
   }
 
-  return firestore.collection('likedIdeas').add({
-    user: auth.currentUser.uid,
-    ideaId: ideaId
+  let user = auth.currentUser;
+
+  return firestore.collection('likedIdeas').where('user', '==', user.uid).where('ideaId', '==', ideaId).get()
+  .then(querySnapshot => {
+    if (querySnapshot.empty) {
+      firestore.collection('likedIdeas').add({
+        user: auth.currentUser.uid,
+        ideaId: ideaId
+      })
+      .then(() => {
+        dispatch(incrementLikedRank(ideaId));
+        dispatch(addLikedIdeas([ideaId]));
+      })
+    }
+    else {
+      console.log('Idea already liked')
+    }
   })
-  .then(docRef => {
-      firestore.collection('likedIdeas').doc(docRef.id).get()
-          .then(doc => {
-              if (doc.exists) {
-                  dispatch(incrementLikedRank(ideaId));
-                  dispatch(fetchLikedIdeas());
-              } else {
-                  // doc.data() will be undefined in this case
-                  console.log("No such document!");
-              }
-          });
-  })
-  .catch(error => dispatch(ideasFailed(error.message)));
 };
 
+// TODO: test
+export const postFlaggedIdea = ideaId => dispatch => {
+  
+  if (!auth.currentUser) {
+    console.log('No user logged in!');
+    return;
+  }
+
+  let user = auth.currentUser;
+
+  return firestore.collection('flaggedIdeas').where('user', '==', user.uid).where('ideaId', '==', ideaId).get()
+  .then(querySnapshot => {
+    if (querySnapshot.empty) {
+      firestore.collection('flaggedIdeas').add({
+        user: auth.currentUser.uid,
+        ideaId: ideaId
+      })
+      .then(() => {
+        dispatch(incrementFlaggedRank(ideaId));
+        dispatch(addFlaggedIdeas([ideaId]));
+      })
+    }
+    else {
+      console.log('Idea already flagged')
+    }
+  })
+};
+
+// TODO: test
 export const deleteLikedIdea = ideaId => dispatch => {
 
   if (!auth.currentUser) {
@@ -138,13 +169,14 @@ export const deleteLikedIdea = ideaId => dispatch => {
           firestore.collection('likedIdeas').doc(doc.id).delete()
           .then(() => {
               dispatch(decrementLikedRank(ideaId));
-              dispatch(removeLikedIdea(doc.data().ideaId));
+              dispatch(removeLikedIdea(ideaId));
           })
       });
   })
   .catch(error => dispatch(ideasFailed(error.message)));
 };
 
+// TODO: test
 export const deleteFlaggedIdea = ideaId => dispatch => {
   if (!auth.currentUser) {
     console.log('No user logged in!');
@@ -159,39 +191,14 @@ return firestore.collection('flaggedIdeas').where('user', '==', user.uid).where(
         firestore.collection('flaggedIdeas').doc(doc.id).delete()
         .then(() => {
             dispatch(decrementFlaggedRank(ideaId))
-            dispatch(removeFlaggedIdea(doc.data().ideaId));
+            dispatch(removeFlaggedIdea(ideaId));
         })
     });
 })
 .catch(error => dispatch(ideasFailed(error.message)));
 };
 
-export const postFlaggedIdea = ideaId => dispatch => {
-  
-  if (!auth.currentUser) {
-    console.log('No user logged in!');
-    return;
-  }
-
-  return firestore.collection('flaggedIdeas').add({
-    user: auth.currentUser.uid,
-    ideaId: ideaId
-  })
-  .then(docRef => {
-      firestore.collection('flaggedIdeas').doc(docRef.id).get()
-          .then(doc => {
-              if (doc.exists) {
-                  dispatch(incrementFlaggedRank(ideaId));
-                  dispatch(fetchFlaggedIdeas());
-              } else {
-                  // doc.data() will be undefined in this case
-                  console.log("No such document!");
-              }
-          });
-  })
-  .catch(error => dispatch(ideasFailed(error.message)));
-};
-
+// TODO: test
 const incrementLikedRank = ideaId => dispatch => {
   
   if (!auth.currentUser) {
@@ -199,51 +206,27 @@ const incrementLikedRank = ideaId => dispatch => {
     return;
   }
 
-  return firestore.collection('ideas').doc(ideaId).get()
-  .then(doc => {
-    if (doc.exists) {
-      const incrementedLikedRank = doc.data().likedRank + 1;
-      firestore.collection('ideas').doc(ideaId).update({likedRank: incrementedLikedRank})
-      .then(() => dispatch(changeLikedRank(ideaId, incrementedLikedRank)));
-    }
+  let ideaRef = firestore.collection('ideas').doc(ideaId);
+
+  firestore.runTransaction(transaction => {
+    return transaction.get(ideaRef)
+    .then(idea => {
+      if (!idea.exists) {
+          throw new Error("Idea does not exist!");
+      }
+
+      let incrementedLikedRank = idea.data().likedRank + 1;
+      transaction.update(ideaRef, { likedRank: incrementedLikedRank });
+      
+      return incrementedLikedRank;
+    });
   })
-  .catch(error => dispatch(ideasFailed(error.message)));
+  .then(incrementedLikedRank => {
+      dispatch(changeLikedRank(ideaId, incrementedLikedRank));
+  }).catch(error => console.error(error));
 };
 
-const decrementLikedRank = ideaId => dispatch => {
-  
-  if (!auth.currentUser) {
-    console.log('No user logged in!');
-    return;
-  }
-
-  return firestore.collection('ideas').doc(ideaId).get()
-  .then(doc => {
-    if (doc.exists) {
-      const decrementedLikedRank = doc.data().likedRank - 1;
-      firestore.collection('ideas').doc(ideaId).update({likedRank: decrementedLikedRank});
-    }
-  })
-  .catch(error => dispatch(ideasFailed(error.message)));
-};
-
-const decrementFlaggedRank = ideaId => dispatch => {
-  
-  if (!auth.currentUser) {
-    console.log('No user logged in!');
-    return;
-  }
-
-  return firestore.collection('ideas').doc(ideaId).get()
-  .then(doc => {
-    if (doc.exists) {
-      const decrementedFlaggedRank = doc.data().flaggedRank - 1;
-      firestore.collection('ideas').doc(ideaId).update({flaggedRank: decrementedFlaggedRank});
-    }
-  })
-  .catch(error => dispatch(ideasFailed(error.message)));
-};
-
+// TODO: test
 const incrementFlaggedRank = ideaId => dispatch => {
   
   if (!auth.currentUser) {
@@ -251,14 +234,80 @@ const incrementFlaggedRank = ideaId => dispatch => {
     return;
   }
 
-  return firestore.collection('ideas').doc(ideaId).get()
-  .then(doc => {
-    if (doc.exists) {
-      const incrementedFlaggedRank = doc.data().flaggedRank + 1;
-      firestore.collection('ideas').doc(ideaId).update({flaggedRank: incrementedFlaggedRank});
-    }
+  let ideaRef = firestore.collection('ideas').doc(ideaId);
+
+  firestore.runTransaction(transaction => {
+    return transaction.get(ideaRef)
+    .then(idea => {
+      if (!idea.exists) {
+          throw new Error("Idea does not exist!");
+      }
+
+      let incrementedFlaggedRank = idea.data().flaggedRank + 1;
+      transaction.update(ideaRef, { flaggedRank: incrementedFlaggedRank });
+      
+      return incrementedFlaggedRank;
+    });
   })
-  .catch(error => dispatch(ideasFailed(error.message)));
+  .then(incrementedFlaggedRank => {
+      dispatch(changeFlaggedRank(ideaId, incrementedFlaggedRank));
+  }).catch(error => console.error(error));
+};
+
+// TODO: fix (!!)
+const decrementLikedRank = ideaId => dispatch => {
+  
+  if (!auth.currentUser) {
+    console.log('No user logged in!');
+    return;
+  }
+
+  let ideaRef = firestore.collection('ideas').doc(ideaId);
+
+  firestore.runTransaction(transaction => {
+    return transaction.get(ideaRef)
+    .then(idea => {
+      if (!idea.exists) {
+          throw new Error("Idea does not exist!");
+      }
+
+      let decrementedLikedRank = idea.data().likedRank - 1;
+      transaction.update(ideaRef, { likedRank: decrementedLikedRank });
+      
+      return decrementedLikedRank;
+    });
+  })
+  .then(decrementedLikedRank => {
+      dispatch(changeLikedRank(ideaId, decrementedLikedRank));
+  }).catch(error => console.error(error));
+};
+
+// TODO: fix (!!)
+const decrementFlaggedRank = ideaId => dispatch => {
+  
+  if (!auth.currentUser) {
+    console.log('No user logged in!');
+    return;
+  }
+
+  let ideaRef = firestore.collection('ideas').doc(ideaId);
+
+  firestore.runTransaction(transaction => {
+    return transaction.get(ideaRef)
+    .then(idea => {
+      if (!idea.exists) {
+          throw new Error("Idea does not exist!");
+      }
+
+      let decrementedFlaggedRank = idea.data().flaggedRank - 1;
+      transaction.update(ideaRef, { flaggedRank: decrementedFlaggedRank });
+      
+      return decrementedFlaggedRank;
+    });
+  })
+  .then(decrementedFlaggedRank => {
+      dispatch(changeFlaggedRank(ideaId, decrementedFlaggedRank));
+  }).catch(error => console.error(error));
 };
 
 export const addSortedIdeas = ideas => {
@@ -300,26 +349,26 @@ const removeLikedIdea = likedIdeaId => (
   }
 );
 
-const changeLikedRank = (ideaId, newLikedRank) => (
-  {
-    type: ActionTypes.CHANGE_LIKED_RANK,
-    id: ideaId,
-    payload: newLikedRank
-  }
-);
-  
-
-// const changeFlaggedRank = newFlaggedRank => (
-//   {
-//     type: ActionTypes.CHANGE_FLAGGED_RANK,
-//     payload: newFlaggedRank
-//   }
-// );
-
 const removeFlaggedIdea = flaggedIdeaId => (
   {
     type: ActionTypes.REMOVE_FLAGGED_IDEA,
     payload: flaggedIdeaId
+  }
+);
+
+// TODO: Implement
+const changeLikedRank = (ideaId, newLikedRank) => (
+  {
+    type: ActionTypes.CHANGE_LIKED_RANK,
+    payload: { ideaId, newLikedRank }
+  }
+);
+  
+// TODO: Implement
+const changeFlaggedRank = (ideaId, newFlaggedRank) => (
+  {
+    type: ActionTypes.CHANGE_FLAGGED_RANK,
+    payload: { ideaId, newFlaggedRank }
   }
 );
 
