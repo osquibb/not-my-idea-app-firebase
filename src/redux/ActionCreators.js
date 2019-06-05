@@ -198,7 +198,6 @@ return firestore.collection('flaggedIdeas').where('user', '==', user.uid).where(
 .catch(error => dispatch(ideasFailed(error.message)));
 };
 
-// TODO: test
 const incrementLikedRank = ideaId => dispatch => {
   
   if (!auth.currentUser) {
@@ -226,7 +225,6 @@ const incrementLikedRank = ideaId => dispatch => {
   }).catch(error => console.error(error));
 };
 
-// TODO: test
 const incrementFlaggedRank = ideaId => dispatch => {
   
   if (!auth.currentUser) {
@@ -254,7 +252,6 @@ const incrementFlaggedRank = ideaId => dispatch => {
   }).catch(error => console.error(error));
 };
 
-// TODO: fix (!!)
 const decrementLikedRank = ideaId => dispatch => {
   
   if (!auth.currentUser) {
@@ -282,7 +279,6 @@ const decrementLikedRank = ideaId => dispatch => {
   }).catch(error => console.error(error));
 };
 
-// TODO: fix (!!)
 const decrementFlaggedRank = ideaId => dispatch => {
   
   if (!auth.currentUser) {
@@ -356,7 +352,7 @@ const removeFlaggedIdea = flaggedIdeaId => (
   }
 );
 
-// TODO: Implement
+
 const changeLikedRank = (ideaId, newLikedRank) => (
   {
     type: ActionTypes.CHANGE_LIKED_RANK,
@@ -364,7 +360,7 @@ const changeLikedRank = (ideaId, newLikedRank) => (
   }
 );
   
-// TODO: Implement
+
 const changeFlaggedRank = (ideaId, newFlaggedRank) => (
   {
     type: ActionTypes.CHANGE_FLAGGED_RANK,

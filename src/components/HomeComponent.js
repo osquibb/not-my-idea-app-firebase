@@ -48,7 +48,7 @@ function Ideas(props) {
 						{idea.text}
 					</ListGroupItemText>
 					<ListGroupItemText style={{"fontSize": ".75rem"}}>
-						Submitted by <strong>{idea.author.username}</strong> at <strong>{Date(idea.createdAt)}</strong>
+						Submitted by <strong>{idea.author.username}</strong> at <strong>date</strong>
 					</ListGroupItemText>
 				</Col>
 
