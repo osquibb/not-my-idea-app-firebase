@@ -1,5 +1,4 @@
-export const ADD_IDEA = 'ADD_IDEA';
-export const ADD_SORTED_IDEAS = 'ADD_SORTED_IDEAS';
+export const ADD_IDEAS = 'ADD_IDEAS';
 export const ADD_LIKED_IDEAS = 'ADD_LIKED_IDEAS';
 export const ADD_FLAGGED_IDEAS = 'ADD_FLAGGED_IDEAS';
 export const REMOVE_LIKED_IDEA = 'REMOVE_LIKED_IDEA';

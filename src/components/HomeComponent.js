@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import InfiniteScroll from 'react-infinite-scroller';
 import { Button, Row, Col, Form, Input, Jumbotron,
 				 ListGroup, ListGroupItem, ListGroupItemText } from 'reactstrap';
 import { Loading } from './LoadingComponent';

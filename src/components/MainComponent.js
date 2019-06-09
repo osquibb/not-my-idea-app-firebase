@@ -5,9 +5,8 @@ import Footer from './FooterComponent';
 import { Container } from 'reactstrap';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { fetchIdeas, addSortedIdeas, postIdea, postLikedIdea,
-				 postFlaggedIdea, deleteLikedIdea, deleteFlaggedIdea, fetchLikedIdeas,
-				 fetchFlaggedIdeas, loginUser, googleLogin, logoutUser, signUpUser } from '../redux/ActionCreators';
+import { fetchIdeas, postIdea, postLikedIdea, postFlaggedIdea, deleteLikedIdea, deleteFlaggedIdea, 
+				 fetchLikedIdeas, fetchFlaggedIdeas, loginUser, googleLogin, logoutUser, signUpUser } from '../redux/ActionCreators';
 
 // map store state to props
 // each field contains a state
@@ -23,7 +22,6 @@ const mapDispatchToProps = dispatch => ({
 	fetchIdeas: () => dispatch(fetchIdeas()),
 	fetchLikedIdeas: () => dispatch(fetchLikedIdeas()),
 	fetchFlaggedIdeas: () => dispatch(fetchFlaggedIdeas()),
-	addSortedIdeas: ideas => dispatch(addSortedIdeas(ideas)),
 	postIdea: idea => dispatch(postIdea(idea)),
 	postLikedIdea: ideaId => dispatch(postLikedIdea(ideaId)),
 	postFlaggedIdea: ideaId => dispatch(postFlaggedIdea(ideaId)),
@@ -42,25 +40,6 @@ class Main extends Component {
 		if(this.props.auth.isAuthenticated) {
 			this.props.fetchLikedIdeas();
 			this.props.fetchFlaggedIdeas();
-		}
-	}
-
-	ideasAreSorted(ideas) {
-		// returns true if ideas are sorted by rank. false otherwise.
-		const sortedIdeas = ideas.slice().sort((a,b) => a.likedRank > b.likedRank ? -1 : 1);
-	
-		for (let i in ideas) {
-			if (ideas[i].likedRank !== sortedIdeas[i].likedRank) {
-				return false;
-			}
-		}
-		return true;	
-	}
-
-	componentDidUpdate() {
-		const ideas = this.props.ideas.ideas;
-		if(!this.ideasAreSorted(ideas)) {
-			this.props.addSortedIdeas(ideas);
 		}
 	}
 

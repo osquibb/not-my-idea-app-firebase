@@ -15,20 +15,13 @@ export const Ideas = (state = {
                       action) => {
     switch (action.type) {
 
-      // State's ideas array REPLACED BY action's payload (sorted ideas array)
+      // State's ideas array REPLACED BY action's payload (ideas array)
       // isLoading set to false
-      case ActionTypes.ADD_SORTED_IDEAS:
+      case ActionTypes.ADD_IDEAS:
         return {...state,
                    isLoading: false,
                    errorMessage: null,
-                   ideas: action.payload
-        };
-
-      // Action's payload (1 idea) ADDED TO state's ideas array
-      // Rest of state unchanged
-      case ActionTypes.ADD_IDEA:
-        return {...state, 
-                ideas: state.ideas.concat(action.payload)
+                   ideas: state.ideas.concat(action.payload)
         };
 
       // isLoading SET TO (or REPLACED BY) true

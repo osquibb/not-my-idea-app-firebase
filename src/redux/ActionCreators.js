@@ -3,8 +3,10 @@ import { auth, firestore, fireauth, firebasestore } from '../firebase/firebase';
 
 export const fetchIdeas = () => dispatch => {
   dispatch(ideasLoading());
+
   
-  return firestore.collection('ideas').get()
+  
+  return firestore.collection('ideas').orderBy('likedRank', 'desc').get()
         .then(snapshot => {
             let ideas = [];
             snapshot.forEach(doc => {
@@ -14,7 +16,7 @@ export const fetchIdeas = () => dispatch => {
             });
             return ideas;
         })
-        .then(ideas => dispatch(addSortedIdeas(ideas)))
+        .then(ideas => dispatch(addIdeas(ideas)))
         .catch(error => dispatch(ideasFailed(error.message)));
 };
 
@@ -33,8 +35,7 @@ export const postIdea = ideaText => dispatch => {
     },
     likedRank: 0,
     flaggedRank: 0,
-    createdAt: firebasestore.FieldValue.serverTimestamp(),
-    updatedAt: firebasestore.FieldValue.serverTimestamp()
+    createdAt: firebasestore.FieldValue.serverTimestamp()
   })
   .then(docRef => {
       firestore.collection('ideas').doc(docRef.id).get()
@@ -43,7 +44,7 @@ export const postIdea = ideaText => dispatch => {
                   const data = doc.data();
                   const _id = doc.id;
                   let idea = {_id, ...data};
-                  dispatch(addIdea(idea))
+                  dispatch(addIdeas([idea]))
               } else {
                   console.log("No such document!");
               }
@@ -306,20 +307,13 @@ const decrementFlaggedRank = ideaId => dispatch => {
   }).catch(error => console.error(error));
 };
 
-export const addSortedIdeas = ideas => {
+export const addIdeas = ideas => {
   return(
-    { type: ActionTypes.ADD_SORTED_IDEAS,
-      payload: ideas.sort((a,b) => a.likedRank > b.likedRank ? -1 : 1)
+    { type: ActionTypes.ADD_IDEAS,
+      payload: ideas
     }
   );
 };
-
-const addIdea = idea => (
-  {
-    type: ActionTypes.ADD_IDEA,
-    payload: idea
-  }
-);
 
 const ideasLoading = () => (
   { type: ActionTypes.IDEAS_LOADING }
