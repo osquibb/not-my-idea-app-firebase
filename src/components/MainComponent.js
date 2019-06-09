@@ -3,7 +3,6 @@ import Home from './HomeComponent';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { Container } from 'reactstrap';
-import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchIdeas, postIdea, postLikedIdea, postFlaggedIdea, deleteLikedIdea, deleteFlaggedIdea, 
 				 fetchLikedIdeas, fetchFlaggedIdeas, loginUser, googleLogin, logoutUser, signUpUser } from '../redux/ActionCreators';
@@ -36,7 +35,6 @@ const mapDispatchToProps = dispatch => ({
 class Main extends Component {
 
 	componentDidMount() {
-		this.props.fetchIdeas(this.props.ideas.lastVisible);
 		if(this.props.auth.isAuthenticated) {
 			this.props.fetchLikedIdeas();
 			this.props.fetchFlaggedIdeas();
@@ -56,30 +54,24 @@ class Main extends Component {
 					fetchLikedIdeas={this.props.fetchLikedIdeas}
 					fetchFlaggedIdeas={this.props.fetchFlaggedIdeas}
 				/>
-				<Switch>
-					<Route path="/" 
-								 component={() => 
-														<Home ideas={this.props.ideas.ideas}
-																	fetchIdeas={this.props.fetchIdeas}
-																	lastVisible={this.props.ideas.lastVisible}
-																	likedIdeas={this.props.ideas.likedIdeas}
-																	flaggedIdeas={this.props.ideas.flaggedIdeas}
-																	auth={this.props.auth}
-																	postIdea={this.props.postIdea}
-																	postFlaggedIdea={this.props.postFlaggedIdea}
-																	postLikedIdea={this.props.postLikedIdea}
-																	deleteLikedIdea={this.props.deleteLikedIdea}
-																	deleteFlaggedIdea={this.props.deleteFlaggedIdea}
-																	ideasLoading={this.props.ideas.isLoading}
-																	ideasErrorMessage={this.props.ideas.errorMessage}
-														/>}
-					/>
-					<Redirect to="/" />
-				</Switch>
+				<Home ideas={this.props.ideas.ideas}
+							fetchIdeas={this.props.fetchIdeas}
+							lastVisible={this.props.ideas.lastVisible}
+							likedIdeas={this.props.ideas.likedIdeas}
+							flaggedIdeas={this.props.ideas.flaggedIdeas}
+							auth={this.props.auth}
+							postIdea={this.props.postIdea}
+							postFlaggedIdea={this.props.postFlaggedIdea}
+							postLikedIdea={this.props.postLikedIdea}
+							deleteLikedIdea={this.props.deleteLikedIdea}
+							deleteFlaggedIdea={this.props.deleteFlaggedIdea}
+							ideasLoading={this.props.ideas.isLoading}
+							ideasErrorMessage={this.props.ideas.errorMessage}
+				/>	
 				<Footer />
 			</Container>
 		);
 	}
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
+export default connect(mapStateToProps, mapDispatchToProps)(Main);
