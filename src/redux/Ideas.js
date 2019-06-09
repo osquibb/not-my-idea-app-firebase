@@ -8,6 +8,7 @@ import * as ActionTypes from './ActionTypes';
 export const Ideas = (state = {
                                 isLoading: true,
                                 errorMessage: null,
+                                lastVisible: null,
                                 ideas: [],
                                 likedIdeas: [],
                                 flaggedIdeas: [] 
@@ -23,6 +24,11 @@ export const Ideas = (state = {
                    errorMessage: null,
                    ideas: state.ideas.concat(action.payload)
         };
+
+      case ActionTypes.UPDATE_LAST_VISIBLE:
+          return {...state,
+                     lastVisible: action.payload
+          };
 
       // isLoading SET TO (or REPLACED BY) true
       // Rest of state fields REPLACED BY initial values.

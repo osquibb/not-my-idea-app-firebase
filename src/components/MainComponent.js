@@ -19,7 +19,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-	fetchIdeas: () => dispatch(fetchIdeas()),
+	fetchIdeas: lastVisible => dispatch(fetchIdeas(lastVisible)),
 	fetchLikedIdeas: () => dispatch(fetchLikedIdeas()),
 	fetchFlaggedIdeas: () => dispatch(fetchFlaggedIdeas()),
 	postIdea: idea => dispatch(postIdea(idea)),
@@ -36,7 +36,7 @@ const mapDispatchToProps = dispatch => ({
 class Main extends Component {
 
 	componentDidMount() {
-		this.props.fetchIdeas();
+		this.props.fetchIdeas(this.props.ideas.lastVisible);
 		if(this.props.auth.isAuthenticated) {
 			this.props.fetchLikedIdeas();
 			this.props.fetchFlaggedIdeas();
@@ -60,6 +60,8 @@ class Main extends Component {
 					<Route path="/" 
 								 component={() => 
 														<Home ideas={this.props.ideas.ideas}
+																	fetchIdeas={this.props.fetchIdeas}
+																	lastVisible={this.props.ideas.lastVisible}
 																	likedIdeas={this.props.ideas.likedIdeas}
 																	flaggedIdeas={this.props.ideas.flaggedIdeas}
 																	auth={this.props.auth}

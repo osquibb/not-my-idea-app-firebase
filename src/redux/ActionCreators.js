@@ -1,24 +1,56 @@
 import * as ActionTypes from './ActionTypes';
 import { auth, firestore, fireauth, firebasestore } from '../firebase/firebase';
 
-export const fetchIdeas = () => dispatch => {
+export const fetchIdeas = lastVisible => dispatch => {
   dispatch(ideasLoading());
 
-  
-  
-  return firestore.collection('ideas').orderBy('likedRank', 'desc').get()
-        .then(snapshot => {
-            let ideas = [];
-            snapshot.forEach(doc => {
-                const data = doc.data()
-                const _id = doc.id
-                ideas.push({_id, ...data });
-            });
-            return ideas;
-        })
-        .then(ideas => dispatch(addIdeas(ideas)))
-        .catch(error => dispatch(ideasFailed(error.message)));
+  if (lastVisible == null) {
+    return firestore.collection('ideas')
+    .orderBy('likedRank', 'desc')
+    .limit(20).get().then(snapshot => {
+      let newLastVisible = snapshot.docs[snapshot.docs.length - 1];
+      let ideas = [];
+      snapshot.forEach(doc => {
+          const data = doc.data()
+          const _id = doc.id
+          ideas.push({_id, ...data });
+      });
+      return {ideas, newLastVisible};
+    })
+    .then(ideas => {
+      dispatch(addIdeas(ideas.ideas));
+      dispatch(updateLastVisible(ideas.newLastVisible));
+    })
+    .catch(error => dispatch(ideasFailed(error.message)));
+  }
+  else {
+    return firestore.collection('ideas')
+    .orderBy('likedRank', 'desc')
+    .startAfter(lastVisible)
+    .limit(20).get().then(snapshot => {
+      let newLastVisible = snapshot.docs[snapshot.docs.length - 1];
+      let ideas = [];
+      snapshot.forEach(doc => {
+          const data = doc.data()
+          const _id = doc.id
+          ideas.push({_id, ...data });
+      });
+      return {ideas, newLastVisible};
+    })
+    .then(ideas => {
+      dispatch(addIdeas(ideas.ideas));
+      dispatch(updateLastVisible(ideas.newLastVisible));
+    })
+    .catch(error => dispatch(ideasFailed(error.message)));
+  }  
 };
+
+const updateLastVisible = lastVisible => (
+  {
+    type: ActionTypes.UPDATE_LAST_VISIBLE,
+    payload: lastVisible
+  }
+);
 
 export const postIdea = ideaText => dispatch => {
 
