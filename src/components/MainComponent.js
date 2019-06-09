@@ -35,6 +35,7 @@ const mapDispatchToProps = dispatch => ({
 class Main extends Component {
 
 	componentDidMount() {
+		this.props.fetchIdeas(this.props.ideas.lastVisible);
 		if(this.props.auth.isAuthenticated) {
 			this.props.fetchLikedIdeas();
 			this.props.fetchFlaggedIdeas();
