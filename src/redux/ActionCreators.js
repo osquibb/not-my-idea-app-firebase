@@ -7,7 +7,7 @@ export const fetchIdeas = lastVisible => dispatch => {
   if (lastVisible == null) {
     return firestore.collection('ideas')
     .orderBy('likedRank', 'desc')
-    .limit(4).get().then(snapshot => {
+    .limit(10).get().then(snapshot => {
       let newLastVisible = snapshot.docs[snapshot.docs.length - 1];
       let ideas = [];
       snapshot.forEach(doc => {
@@ -27,7 +27,7 @@ export const fetchIdeas = lastVisible => dispatch => {
     return firestore.collection('ideas')
     .orderBy('likedRank', 'desc')
     .startAfter(lastVisible)
-    .limit(4).get().then(snapshot => {
+    .limit(10).get().then(snapshot => {
       let newLastVisible = snapshot.docs[snapshot.docs.length - 1];
       let ideas = [];
       snapshot.forEach(doc => {

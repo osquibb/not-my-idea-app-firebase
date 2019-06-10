@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import InfiniteScroll from 'react-infinite-scroller';
+// import InfiniteScroll from 'react-infinite-scroller';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { Button, Row, Col, Form, Input,
 				 ListGroup, ListGroupItem, ListGroupItemText } from 'reactstrap';
 import { Loading } from './LoadingComponent';
@@ -124,12 +125,10 @@ export default class Home extends Component {
 							test button
 						</Button>
 						
-
 						<InfiniteScroll
-							pageStart={0}
+							hasMore={this.props.moreIdeas}
+							next={this.loadMoreIdeas}
 							loader={<Loading />}
-							hasMore={false}
-							loadMore={this.loadMoreIdeas}
 						>
 							<ListGroup>
 								<Ideas 
@@ -144,9 +143,9 @@ export default class Home extends Component {
 									isLoading={this.props.ideasLoading}
 									errorMessage={this.props.ideasErrorMessage}
 								/>
-							</ListGroup>
-						</InfiniteScroll>
-				</Fragment>
+						</ListGroup>
+				</InfiniteScroll>
+			</Fragment>
     );
 	}
 }
