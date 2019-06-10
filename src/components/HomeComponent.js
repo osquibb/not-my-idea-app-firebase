@@ -76,8 +76,7 @@ export default class Home extends Component {
 
 	componentDidMount() {
 		if (this.props.lastVisible == null) {
-			this.props.fetchIdeas(this.props.lastVisible);
-			this.props.checkForMoreIdeas(this.props.lastVisible);
+			this.loadMoreIdeas();
 		}
 	}
 
@@ -90,9 +89,9 @@ export default class Home extends Component {
 		event.preventDefault();
 	}
 
-	loadMoreIdeas() {
-		this.props.fetchIdeas(this.props.lastVisible);
-		this.props.checkForMoreIdeas(this.props.lastVisible);
+	async loadMoreIdeas() {
+		await this.props.fetchIdeas(this.props.lastVisible);
+		await this.props.checkForMoreIdeas(this.props.lastVisible);
 	}
 
 	render() {
@@ -118,10 +117,12 @@ export default class Home extends Component {
 						</Form>
 
 						
-						{/* <Button onClick={() => {
-							this.props.checkForMoreIdeas(this.props.lastVisible);
-							this.props.fetchIdeas(this.props.lastVisible);
-						}}>test button</Button> */}
+						<Button 
+							disabled={!this.props.moreIdeas} 
+							onClick={() => this.loadMoreIdeas()}
+						>
+							test button
+						</Button>
 						
 
 						<InfiniteScroll

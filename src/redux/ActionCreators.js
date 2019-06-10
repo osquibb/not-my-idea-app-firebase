@@ -7,7 +7,7 @@ export const fetchIdeas = lastVisible => dispatch => {
   if (lastVisible == null) {
     return firestore.collection('ideas')
     .orderBy('likedRank', 'desc')
-    .limit(10).get().then(snapshot => {
+    .limit(4).get().then(snapshot => {
       let newLastVisible = snapshot.docs[snapshot.docs.length - 1];
       let ideas = [];
       snapshot.forEach(doc => {
@@ -27,7 +27,7 @@ export const fetchIdeas = lastVisible => dispatch => {
     return firestore.collection('ideas')
     .orderBy('likedRank', 'desc')
     .startAfter(lastVisible)
-    .limit(10).get().then(snapshot => {
+    .limit(4).get().then(snapshot => {
       let newLastVisible = snapshot.docs[snapshot.docs.length - 1];
       let ideas = [];
       snapshot.forEach(doc => {
@@ -50,7 +50,7 @@ export const checkForMoreIdeas = lastVisible => dispatch => {
     return firestore.collection('ideas')
     .orderBy('likedRank', 'desc')
     .limit(1).get().then(snapshot => snapshot)
-    .then(moreIdeas => dispatch(updateMoreIdeas(moreIdeas)))
+    .then(snapshot => dispatch(updateMoreIdeas(snapshot.docs.length > 0)))
     .catch(error => console.log(error));
   }
   else {
@@ -58,15 +58,15 @@ export const checkForMoreIdeas = lastVisible => dispatch => {
     .orderBy('likedRank', 'desc')
     .startAfter(lastVisible)
     .limit(1).get().then(snapshot => snapshot)
-    .then(moreIdeas => dispatch(updateMoreIdeas(moreIdeas)))
+    .then(snapshot => dispatch(updateMoreIdeas(snapshot.docs.length > 0)))
     .catch(error => console.log(error));
   }  
 }
 
-const updateMoreIdeas = moreIdeas => (
+const updateMoreIdeas = nextIdeaId => (
   {
     type: ActionTypes.UPDATE_MORE_IDEAS,
-    payload: moreIdeas
+    payload: nextIdeaId
   }
 )
 
