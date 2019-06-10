@@ -115,16 +115,7 @@ export default class Home extends Component {
 								<i className="fa fa-plus"/>
 							</Button>
 							</Col>
-						</Form>
-
-						
-						<Button 
-							disabled={!this.props.moreIdeas} 
-							onClick={() => this.loadMoreIdeas()}
-						>
-							test button
-						</Button>
-						
+						</Form>	
 						<InfiniteScroll
 							hasMore={this.props.moreIdeas}
 							next={this.loadMoreIdeas}
