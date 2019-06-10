@@ -5,7 +5,7 @@ import { Button, Row, Col, Form, Input,
 				 ListGroup, ListGroupItem, ListGroupItemText } from 'reactstrap';
 import { Loading } from './LoadingComponent';
 
-function Ideas(props) {
+function RenderIdeas(props) {
 
 	return(props.ideas.map(idea => 
 		<ListGroupItem key={idea._id}>
@@ -39,7 +39,7 @@ function Ideas(props) {
 						{idea.text}
 					</ListGroupItemText>
 					<ListGroupItemText style={{"fontSize": ".75rem"}}>
-						Submitted by <strong>{idea.author.username}</strong> at <strong>date</strong>
+						Submitted by <strong>{idea.author.username}</strong> on <strong>{new Date(idea.createdAt.seconds * 1000).toDateString()}</strong>
 					</ListGroupItemText>
 				</Col>
 
@@ -64,7 +64,7 @@ function Ideas(props) {
 	);
 }
 
-export default class IdeaList extends Component {
+export default class Ideas extends Component {
 
 	constructor(props) {
 		super(props);
@@ -122,7 +122,7 @@ export default class IdeaList extends Component {
 							loader={<Loading />}
 						>
 							<ListGroup>
-								<Ideas 
+								<RenderIdeas 
 									auth={this.props.auth}
 									ideas={this.props.ideas}
 									likedIdeas={this.props.likedIdeas}

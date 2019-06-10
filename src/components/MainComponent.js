@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import IdeaList from './IdeaListComponent';
+import Ideas from './IdeasComponent';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { Container } from 'reactstrap';
@@ -55,7 +55,7 @@ class Main extends Component {
 					fetchLikedIdeas={this.props.fetchLikedIdeas}
 					fetchFlaggedIdeas={this.props.fetchFlaggedIdeas}
 				/>
-				<IdeaList 
+				<Ideas 
 					ideas={this.props.ideas.ideas}
 					fetchIdeas={this.props.fetchIdeas}
 					checkForMoreIdeas={this.props.checkForMoreIdeas}
