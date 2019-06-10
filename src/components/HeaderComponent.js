@@ -83,6 +83,7 @@ class CustomDropDown extends Component {
               <React.Fragment>
                 <div className="text-center">
                   <img
+                    alt='Sign in with Google'
                     id='google-sign-in'
                     style={{maxWidth: '90%'}}
                     src='/icons/google_btn.png'
