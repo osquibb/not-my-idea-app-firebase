@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Home from './HomeComponent';
+import IdeaList from './IdeaListComponent';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { Container } from 'reactstrap';
@@ -55,21 +55,22 @@ class Main extends Component {
 					fetchLikedIdeas={this.props.fetchLikedIdeas}
 					fetchFlaggedIdeas={this.props.fetchFlaggedIdeas}
 				/>
-				<Home ideas={this.props.ideas.ideas}
-							fetchIdeas={this.props.fetchIdeas}
-							checkForMoreIdeas={this.props.checkForMoreIdeas}
-							lastVisible={this.props.ideas.lastVisible}
-							moreIdeas={this.props.ideas.moreIdeas}
-							likedIdeas={this.props.ideas.likedIdeas}
-							flaggedIdeas={this.props.ideas.flaggedIdeas}
-							auth={this.props.auth}
-							postIdea={this.props.postIdea}
-							postFlaggedIdea={this.props.postFlaggedIdea}
-							postLikedIdea={this.props.postLikedIdea}
-							deleteLikedIdea={this.props.deleteLikedIdea}
-							deleteFlaggedIdea={this.props.deleteFlaggedIdea}
-							ideasLoading={this.props.ideas.isLoading}
-							ideasErrorMessage={this.props.ideas.errorMessage}
+				<IdeaList 
+					ideas={this.props.ideas.ideas}
+					fetchIdeas={this.props.fetchIdeas}
+					checkForMoreIdeas={this.props.checkForMoreIdeas}
+					lastVisible={this.props.ideas.lastVisible}
+					moreIdeas={this.props.ideas.moreIdeas}
+					likedIdeas={this.props.ideas.likedIdeas}
+					flaggedIdeas={this.props.ideas.flaggedIdeas}
+					auth={this.props.auth}
+					postIdea={this.props.postIdea}
+					postFlaggedIdea={this.props.postFlaggedIdea}
+					postLikedIdea={this.props.postLikedIdea}
+					deleteLikedIdea={this.props.deleteLikedIdea}
+					deleteFlaggedIdea={this.props.deleteFlaggedIdea}
+					ideasLoading={this.props.ideas.isLoading}
+					ideasErrorMessage={this.props.ideas.errorMessage}
 				/>	
 				<Footer />
 			</Container>

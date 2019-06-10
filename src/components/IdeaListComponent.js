@@ -64,7 +64,7 @@ function Ideas(props) {
 	);
 }
 
-export default class Home extends Component {
+export default class IdeaList extends Component {
 
 	constructor(props) {
 		super(props);
