@@ -35,7 +35,7 @@ function RenderIdeas(props) {
 					</Row>	
 				</Col>
 				<Col xs="8">
-					<ListGroupItemText>
+					<ListGroupItemText style={{wordWrap: 'break-word'}}>
 						{idea.text}
 					</ListGroupItemText>
 					<ListGroupItemText style={{"fontSize": ".75rem"}}>
