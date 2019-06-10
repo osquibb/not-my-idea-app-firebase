@@ -4,7 +4,7 @@ import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { Container } from 'reactstrap';
 import { connect } from 'react-redux';
-import { fetchIdeas, postIdea, postLikedIdea, postFlaggedIdea, deleteLikedIdea, deleteFlaggedIdea, 
+import { fetchIdeas, checkForMoreIdeas, postIdea, postLikedIdea, postFlaggedIdea, deleteLikedIdea, deleteFlaggedIdea, 
 				 fetchLikedIdeas, fetchFlaggedIdeas, loginUser, googleLogin, logoutUser, signUpUser } from '../redux/ActionCreators';
 
 // map store state to props
@@ -19,6 +19,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
 	fetchIdeas: lastVisible => dispatch(fetchIdeas(lastVisible)),
+	checkForMoreIdeas: lastVisible => dispatch(checkForMoreIdeas(lastVisible)),
 	fetchLikedIdeas: () => dispatch(fetchLikedIdeas()),
 	fetchFlaggedIdeas: () => dispatch(fetchFlaggedIdeas()),
 	postIdea: idea => dispatch(postIdea(idea)),
@@ -35,7 +36,6 @@ const mapDispatchToProps = dispatch => ({
 class Main extends Component {
 
 	componentDidMount() {
-		this.props.fetchIdeas(this.props.ideas.lastVisible);
 		if(this.props.auth.isAuthenticated) {
 			this.props.fetchLikedIdeas();
 			this.props.fetchFlaggedIdeas();
@@ -57,7 +57,9 @@ class Main extends Component {
 				/>
 				<Home ideas={this.props.ideas.ideas}
 							fetchIdeas={this.props.fetchIdeas}
+							checkForMoreIdeas={this.props.checkForMoreIdeas}
 							lastVisible={this.props.ideas.lastVisible}
+							moreIdeas={this.props.ideas.moreIdeas}
 							likedIdeas={this.props.ideas.likedIdeas}
 							flaggedIdeas={this.props.ideas.flaggedIdeas}
 							auth={this.props.auth}

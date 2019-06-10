@@ -1,23 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
-import { Button, Row, Col, Form, Input, Jumbotron,
+import { Button, Row, Col, Form, Input,
 				 ListGroup, ListGroupItem, ListGroupItemText } from 'reactstrap';
 import { Loading } from './LoadingComponent';
 
 function Ideas(props) {
 
-	if (props.isLoading) {
-		return(
-			<Loading />
-		);
-	} else if (props.errorMessage) {
-		return(
-			<div className="text-center">
-				{props.errorMessage}
-			</div>
-		);
-	} else {
-		return props.ideas.map(idea => 
+	return(props.ideas.map(idea => 
 		<ListGroupItem key={idea._id}>
 			<Row className="align-items-center">
 				<Col xs="2" className="text-center">
@@ -70,8 +59,8 @@ function Ideas(props) {
 					/>
 				</Col>
 			</Row>			
-		</ListGroupItem>);
-	}
+		</ListGroupItem>)
+	);
 }
 
 export default class Home extends Component {
@@ -82,6 +71,14 @@ export default class Home extends Component {
 
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
+		this.loadMoreIdeas = this.loadMoreIdeas.bind(this);
+	}
+
+	componentDidMount() {
+		if (this.props.lastVisible == null) {
+			this.props.fetchIdeas(this.props.lastVisible);
+			this.props.checkForMoreIdeas(this.props.lastVisible);
+		}
 	}
 
 	handleChange(event) {
@@ -91,6 +88,11 @@ export default class Home extends Component {
 	handleSubmit(event) {
 		this.props.postIdea(this.state.inputText);
 		event.preventDefault();
+	}
+
+	loadMoreIdeas() {
+		this.props.fetchIdeas(this.props.lastVisible);
+		this.props.checkForMoreIdeas(this.props.lastVisible);
 	}
 
 	render() {
@@ -114,22 +116,35 @@ export default class Home extends Component {
 							</Button>
 							</Col>
 						</Form>
-					<Jumbotron className="mt-3 bg-transparent">
-						<ListGroup>
-							<Ideas 
-								auth={this.props.auth}
-								ideas={this.props.ideas}
-								likedIdeas={this.props.likedIdeas}
-								flaggedIdeas={this.props.flaggedIdeas}
-								postLikedIdea={this.props.postLikedIdea}
-								postFlaggedIdea={this.props.postFlaggedIdea}
-								deleteLikedIdea={this.props.deleteLikedIdea}
-								deleteFlaggedIdea={this.props.deleteFlaggedIdea}
-								isLoading={this.props.ideasLoading}
-								errorMessage={this.props.ideasErrorMessage}
-							/>
-						</ListGroup>
-					</Jumbotron>
+
+						
+						{/* <Button onClick={() => {
+							this.props.checkForMoreIdeas(this.props.lastVisible);
+							this.props.fetchIdeas(this.props.lastVisible);
+						}}>test button</Button> */}
+						
+
+						<InfiniteScroll
+							pageStart={0}
+							loader={<Loading />}
+							hasMore={false}
+							loadMore={this.loadMoreIdeas}
+						>
+							<ListGroup>
+								<Ideas 
+									auth={this.props.auth}
+									ideas={this.props.ideas}
+									likedIdeas={this.props.likedIdeas}
+									flaggedIdeas={this.props.flaggedIdeas}
+									postLikedIdea={this.props.postLikedIdea}
+									postFlaggedIdea={this.props.postFlaggedIdea}
+									deleteLikedIdea={this.props.deleteLikedIdea}
+									deleteFlaggedIdea={this.props.deleteFlaggedIdea}
+									isLoading={this.props.ideasLoading}
+									errorMessage={this.props.ideasErrorMessage}
+								/>
+							</ListGroup>
+						</InfiniteScroll>
 				</Fragment>
     );
 	}

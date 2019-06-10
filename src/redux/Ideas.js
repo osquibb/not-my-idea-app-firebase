@@ -9,6 +9,7 @@ export const Ideas = (state = {
                                 isLoading: true,
                                 errorMessage: null,
                                 lastVisible: null,
+                                moreIdeas: false,
                                 ideas: [],
                                 likedIdeas: [],
                                 flaggedIdeas: [] 
@@ -30,13 +31,17 @@ export const Ideas = (state = {
                      lastVisible: action.payload
           };
 
+      case ActionTypes.UPDATE_MORE_IDEAS:
+        return {...state,
+                    moreIdeas: action.payload
+        };
+
       // isLoading SET TO (or REPLACED BY) true
       // Rest of state fields REPLACED BY initial values.
       case ActionTypes.IDEAS_LOADING:
         return {...state,
                    isLoading: true,
-                   errorMessage: null,
-                   ideas: []
+                   errorMessage: null
         };
 
       // errorMessage REPLACED BY action's payload (error message)

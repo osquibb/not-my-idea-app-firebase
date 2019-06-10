@@ -45,6 +45,31 @@ export const fetchIdeas = lastVisible => dispatch => {
   }  
 };
 
+export const checkForMoreIdeas = lastVisible => dispatch => {
+  if (lastVisible == null) {
+    return firestore.collection('ideas')
+    .orderBy('likedRank', 'desc')
+    .limit(1).get().then(snapshot => snapshot)
+    .then(moreIdeas => dispatch(updateMoreIdeas(moreIdeas)))
+    .catch(error => console.log(error));
+  }
+  else {
+    return firestore.collection('ideas')
+    .orderBy('likedRank', 'desc')
+    .startAfter(lastVisible)
+    .limit(1).get().then(snapshot => snapshot)
+    .then(moreIdeas => dispatch(updateMoreIdeas(moreIdeas)))
+    .catch(error => console.log(error));
+  }  
+}
+
+const updateMoreIdeas = moreIdeas => (
+  {
+    type: ActionTypes.UPDATE_MORE_IDEAS,
+    payload: moreIdeas
+  }
+)
+
 const updateLastVisible = lastVisible => (
   {
     type: ActionTypes.UPDATE_LAST_VISIBLE,
