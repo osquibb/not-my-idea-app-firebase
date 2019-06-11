@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 // import InfiniteScroll from 'react-infinite-scroller';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Button, Row, Col, Form, Input, FormGroup, FormFeedback, FormText,
+import { Button, Row, Col, Form, Input, FormGroup, FormFeedback,
 				 ListGroup, ListGroupItem, ListGroupItemText } from 'reactstrap';
 import { Loading } from './LoadingComponent';
 
@@ -120,7 +120,7 @@ export default class Ideas extends Component {
 									onChange={this.handleChange} 
 									placeholder="your idea..." 
 								/>
-								<FormFeedback invalid>Too Long! Ideas must contain no more than 140 characters.</FormFeedback>
+								<FormFeedback>Too Long! Ideas must contain no more than 140 characters.</FormFeedback>
 							</FormGroup>	
 						</Col>
 						<Col xs="2">
