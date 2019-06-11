@@ -10,6 +10,7 @@ class CustomDropDown extends Component {
     this.state = {
       dropdownOpen: false,
       signUpModal: false,
+      verifiedSignUpModal: false,
       email: '',
       password: '',
       user: null
@@ -18,8 +19,9 @@ class CustomDropDown extends Component {
     this.handleEmail = this.handleEmail.bind(this);
     this.handlePassword = this.handlePassword.bind(this);
     this.toggleSignUpModal = this.toggleSignUpModal.bind(this);
+    this.toggleVerifiedSignUpModal = this.toggleVerifiedSignUpModal.bind(this);
     this.toggleDropDown = this.toggleDropDown.bind(this);
-    this.signUp = this.signUp.bind(this);
+    this.signUpWithEmail = this.signUpWithEmail.bind(this);
     this.logIn = this.logIn.bind(this);
     this.logOut = this.logOut.bind(this);
   }
@@ -32,7 +34,16 @@ class CustomDropDown extends Component {
         this.setState({user: null})
       }
     });
+
+    let params = new URLSearchParams(window.location.search);
+    
+    if (params.has('verified')) {
+      this.setState({verifiedSignUpModal: true});
+    } else {
+      this.setState({verifiedSignUpModal: false});
+    }
   }
+
 
   async logIn() {
     this.setState({dropdownOpen: false});
@@ -46,15 +57,16 @@ class CustomDropDown extends Component {
     this.setState(prevState => ({dropdownOpen: !prevState.dropdownOpen}));
   }
 
+  toggleVerifiedSignUpModal() {
+    this.setState(prevState => ({verifiedSignUpModal: !prevState.verifiedSignUpModal}));
+  }
+
   toggleSignUpModal() {
     this.setState(prevState => ({signUpModal: !prevState.signUpModal}));
   }
 
-  async signUp() {
-    await this.props.signUpUser({
-      email: this.state.email,
-      password: this.state.password
-      });
+  signUpWithEmail() {
+    this.props.signUpUser(this.state.email);
     this.toggleSignUpModal();
   }
 
@@ -141,27 +153,44 @@ class CustomDropDown extends Component {
         <Form className="px-3 py-3">
                   <FormGroup>
                     <Input 
-                      type="text"
+                      type="email"
                       value={this.state.email}
                       onChange={this.handleEmail}
                       placeholder="Email"
                     />
                   </FormGroup>
+                </Form>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={this.signUpWithEmail}>Sign Up</Button>{' '}
+          <Button color="secondary" onClick={this.toggleSignUpModal}>Cancel</Button>
+        </ModalFooter>
+      </Modal>
+
+      {/* TEST */}
+
+      <Modal isOpen={this.state.verifiedSignUpModal} toggle={this.toggleVerifiedSignUpModal}>
+        <ModalHeader toggle={this.toggleVerifiedSignUpModal}>Set Password</ModalHeader>
+        <ModalBody>
+        <Form className="px-3 py-3">
                   <FormGroup>
-                    <Input
+                    <Input 
                       type="password"
                       value={this.state.password}
                       onChange={this.handlePassword}
-                      placeholder="Password" 
+                      placeholder="Password"
                     />
                   </FormGroup>
                 </Form>
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={this.signUp}>Sign Up</Button>{' '}
-          <Button color="secondary" onClick={this.toggleSignUpModal}>Cancel</Button>
+          <Button color="primary" onClick={this.toggleVerifiedSignUpModal}>Complete Sign Up</Button>{' '}
+          <Button color="secondary" onClick={this.toggleVerifiedSignUpModal}>Cancel</Button>
         </ModalFooter>
       </Modal>
+
+      {/* TEST */}
+
     </React.Fragment>
     );
   } 

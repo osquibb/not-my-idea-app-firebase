@@ -30,7 +30,7 @@ const mapDispatchToProps = dispatch => ({
 	loginUser: creds => dispatch(loginUser(creds)),
 	googleLogin: () => dispatch(googleLogin()),
 	logoutUser: () => dispatch(logoutUser()),
-	signUpUser: creds => dispatch(signUpUser(creds)) 
+	signUpUser: email => dispatch(signUpUser(email)) 
 });
 
 class Main extends Component {

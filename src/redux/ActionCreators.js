@@ -488,7 +488,7 @@ export const logoutUser = () => dispatch => {
   auth.signOut()
   .then(() => console.log("Sign out successful"))
   .catch((error) => console.log(error));
-  
+
   localStorage.removeItem('user');
   dispatch(removeLikedAndFlaggedIdeas());
   dispatch(receiveLogout());
@@ -514,10 +514,15 @@ const signUpError = (message) => {
   }
 }
 
-export const signUpUser = creds => dispatch => {
+export const signUpUser = email => dispatch => {
   dispatch(requestSignUp());
 
-  auth.createUserWithEmailAndPassword(creds.email, creds.password)
+  let actionCodeSettings = {
+    url: 'http://localhost:3000/?verified',
+    handleCodeInApp: true
+  };
+
+  fireauth().sendSignInLinkToEmail(email, actionCodeSettings)
   .then(response => dispatch(receiveSignUp(response)))
   .catch(error => dispatch(signUpError(error.message)));
 }
