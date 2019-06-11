@@ -485,11 +485,10 @@ const receiveLogout = () => {
 export const logoutUser = () => dispatch => {
   dispatch(requestLogout());
 
-  auth.signOut().then(() => {
-    // Sign-out successful.
-  }).catch((error) => {
-    // An error happened.
-  });
+  auth.signOut()
+  .then(() => console.log("Sign out successful"))
+  .catch((error) => console.log(error));
+  
   localStorage.removeItem('user');
   dispatch(removeLikedAndFlaggedIdeas());
   dispatch(receiveLogout());

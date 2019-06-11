@@ -120,17 +120,15 @@ export default class Ideas extends Component {
 									onChange={this.handleChange} 
 									placeholder="your idea..." 
 								/>
-								<FormFeedback>Too Long! Ideas must contain no more than 140 characters.</FormFeedback>
+								<FormFeedback>Too Long!  No more than 140 characters!</FormFeedback>
 							</FormGroup>	
 						</Col>
 						<Col xs="2">
 							<FormGroup>	
 								<Button type="submit"
-												id="addIdea" 
-												className="text-muted"
-												outline={true}
+												id="addIdea"
 												block={true} >
-									<i className="fa fa-plus"/>
+									<i className="fa fa-plus text-white"/>
 								</Button>
 							</FormGroup>
 						</Col>	

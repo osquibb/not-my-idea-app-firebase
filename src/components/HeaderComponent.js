@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { fireauth } from '../firebase/firebase';
 import { Navbar, NavbarBrand, ButtonDropdown, DropdownToggle, DropdownMenu, 
         DropdownItem, Form, Input, FormGroup, Button, Modal, ModalHeader,
         ModalBody, ModalFooter } from 'reactstrap'; 
@@ -10,7 +11,8 @@ class CustomDropDown extends Component {
       dropdownOpen: false,
       signUpModal: false,
       email: '',
-      password: ''
+      password: '',
+      user: null
     };
     this.toggleDropDown = this.toggleDropDown.bind(this);
     this.handleEmail = this.handleEmail.bind(this);
@@ -20,6 +22,16 @@ class CustomDropDown extends Component {
     this.signUp = this.signUp.bind(this);
     this.logIn = this.logIn.bind(this);
     this.logOut = this.logOut.bind(this);
+  }
+
+  componentDidMount() {
+    fireauth().onAuthStateChanged(user => {
+      if (user) {
+        this.setState({user})
+      } else {
+        this.setState({user: null})
+      }
+    });
   }
 
   async logIn() {
@@ -64,10 +76,10 @@ class CustomDropDown extends Component {
       <React.Fragment>
         <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropDown}>
           <DropdownToggle caret>
-            {this.props.auth.isAuthenticated ? this.props.auth.user.email : 'Sign Up / Sign In'}
+            {this.state.user !== null ? this.state.user.email  : 'Sign Up / Sign In'}
           </DropdownToggle>
           <DropdownMenu right={true} className="mt-2">
-            {this.props.auth.isAuthenticated ?
+            {this.state.user !== null ?
               <Form>
                 <FormGroup>
                   <Button 
