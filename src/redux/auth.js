@@ -7,6 +7,7 @@ export const Auth = (state = {
         isLoading: false,
         isAuthenticated: false,
         isSignedUp: false,
+        verified: false,
         user: null,
         errMess: null
     }, action) => {
@@ -55,6 +56,10 @@ export const Auth = (state = {
                     isLoading: false,
                     isSignedUp: false,
                     errMess: action.message  
+                };
+            case ActionTypes.SET_VERIFIED:
+                return {...state,
+                    verified: action.payload
                 };
 
         default:

@@ -434,6 +434,62 @@ const removeLikedAndFlaggedIdeas = () => (
 
 // *** USER LOGIN ACTION CREATORS *** //
 
+export const checkForUser = () => dispatch => {
+  fireauth().onAuthStateChanged(user => {
+    if (user) {
+      dispatch(receiveLogin(user));
+    } else {
+      console.log('No user logged in');
+    }
+  });
+}
+
+// export const completeSignUpUser = ({displayName, password, url}) => dispatch => {
+
+// if (fireauth().isSignInWithEmailLink(url)) {
+
+//   let email = window.localStorage.getItem('emailForSignIn');
+//   if (!email) {
+//     email = window.prompt('Please provide your email for confirmation');
+//   }
+//   fireauth().signInWithEmailLink(email, url)
+//     .then(result => {
+//       window.localStorage.removeItem('emailForSignIn');
+
+//       if (result.additionalUserInfo.isNewUser) {
+//         let user = result.user;
+
+//         user.updatePassword(password)
+//         .then(() => console.log('Password Set'))
+//         .catch(error => console.log(error));
+  
+//         user.updateProfile({displayName: displayName})
+//         .then(() => console.log('Display Name Set'))
+//         .catch(error => console.log(error));
+//       }
+//       dispatch(receiveLogin(user));
+//     })
+//     .catch(error => dispatch(loginError(error.message)));
+// }
+
+export const checkForVerified = () => dispatch => {
+  let params = new URLSearchParams(window.location.search);
+    
+    if (params.has('verified')) {
+      dispatch(setVerified(true));
+    } else {
+      dispatch(setVerified(false));
+    }
+}
+
+const setVerified = verified => (
+  {
+  type: ActionTypes.SET_VERIFIED,
+  payload: verified
+  }
+);
+
+
 const requestLogin = () => {
   return {
       type: ActionTypes.LOGIN_REQUEST
@@ -523,7 +579,10 @@ export const signUpUser = email => dispatch => {
   };
 
   fireauth().sendSignInLinkToEmail(email, actionCodeSettings)
-  .then(response => dispatch(receiveSignUp(response)))
+  .then(response => {
+    dispatch(receiveSignUp(response));
+    window.localStorage.setItem('emailForSignIn', email);
+  })
   .catch(error => dispatch(signUpError(error.message)));
 }
 

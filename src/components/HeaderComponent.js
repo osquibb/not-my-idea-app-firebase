@@ -27,23 +27,18 @@ class CustomDropDown extends Component {
   }
 
   componentDidMount() {
-    fireauth().onAuthStateChanged(user => {
-      if (user) {
-        this.setState({user})
-      } else {
-        this.setState({user: null})
-      }
-    });
+    this.props.checkForUser();
+    this.checkVerifiedAndToggleModal();
+  }
 
-    let params = new URLSearchParams(window.location.search);
-    
-    if (params.has('verified')) {
+  async checkVerifiedAndToggleModal() {
+    await this.props.checkForVerified();
+    if (this.props.auth.verified) {
       this.setState({verifiedSignUpModal: true});
     } else {
       this.setState({verifiedSignUpModal: false});
     }
   }
-
 
   async logIn() {
     this.setState({dropdownOpen: false});
@@ -88,10 +83,10 @@ class CustomDropDown extends Component {
       <React.Fragment>
         <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropDown}>
           <DropdownToggle caret>
-            {this.state.user !== null ? this.state.user.email  : 'Sign Up / Sign In'}
+            {this.props.auth.isAuthenticated ? this.props.auth.user.email : 'Sign Up / Sign In'}
           </DropdownToggle>
           <DropdownMenu right={true} className="mt-2">
-            {this.state.user !== null ?
+            {this.props.auth.isAuthenticated ?
               <Form>
                 <FormGroup>
                   <Button 
@@ -212,6 +207,8 @@ export default class Header extends Component {
             loginUser={this.props.loginUser}
             googleLogin={this.props.googleLogin}
             logoutUser={this.props.logoutUser}
+            checkForUser={this.props.checkForUser}
+            checkForVerified={this.props.checkForVerified}
             toggleSignUpModal={this.toggleSignUpModal}
           />
         </Navbar>
