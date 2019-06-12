@@ -65,6 +65,8 @@ class Main extends Component {
 				<Ideas 
 					ideas={this.props.ideas.ideas}
 					fetchIdeas={this.props.fetchIdeas}
+					fetchLikedIdeas={this.props.fetchLikedIdeas}
+					fetchFlaggedIdeas={this.props.fetchFlaggedIdeas}
 					checkForMoreIdeas={this.props.checkForMoreIdeas}
 					lastVisible={this.props.ideas.lastVisible}
 					moreIdeas={this.props.ideas.moreIdeas}

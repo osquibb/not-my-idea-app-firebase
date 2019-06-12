@@ -4,6 +4,10 @@
   padding: 0;
 }
 
+.idea-button:hover {
+  cursor: pointer;
+}
+
 #google-sign-in:hover {
   cursor: pointer;
 }
