@@ -23,7 +23,7 @@ export const Ideas = (state = {
         return {...state,
                    isLoading: false,
                    errorMessage: null,
-                   ideas: state.ideas.concat(action.payload)
+                   ideas: action.payload.concat(state.ideas)
         };
 
       case ActionTypes.UPDATE_LAST_VISIBLE:
