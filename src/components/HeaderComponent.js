@@ -10,6 +10,7 @@ class CustomDropDown extends Component {
       dropdownOpen: false,
       signUpModal: false,
       verifiedSignUpModal: false,
+      checkEmail: false,
       email: '',
       displayName: '',
       password: ''
@@ -63,7 +64,7 @@ class CustomDropDown extends Component {
 
   signUpWithEmail() {
     this.props.signUpUser(this.state.email);
-    this.toggleSignUpModal();
+    this.setState({checkEmail: true});
   }
 
   completeSignUp() {
@@ -161,24 +162,37 @@ class CustomDropDown extends Component {
         <ModalHeader toggle={this.toggleSignUpModal}>New Account</ModalHeader>
         <ModalBody>
         <Form className="px-3 py-3">
-                  <FormGroup>
-                    <Input 
-                      type="email"
-                      value={this.state.email}
-                      onChange={this.handleEmail}
-                      placeholder="Email"
-                    />
-                  </FormGroup>
-                </Form>
+          <FormGroup className={this.state.checkEmail ? "d-none" : null}>
+            <Input 
+              type="email"
+              value={this.state.email}
+              onChange={this.handleEmail}
+              placeholder="Email"
+            />
+          </FormGroup>
+        </Form>
+        <p className={this.state.checkEmail ? "text-center" : "d-none"}>
+          Check your email inbox to verify your account.
+        </p>
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={this.signUpWithEmail}>Sign Up</Button>{' '}
-          <Button color="secondary" onClick={this.toggleSignUpModal}>Cancel</Button>
+          <Button 
+            color="primary" 
+            onClick={this.state.checkEmail ? this.toggleSignUpModal : this.signUpWithEmail}>
+              {this.state.checkEmail ? 'OK' : 'Verify Email'}
+          </Button>
+          {' '}
+          <Button
+            hidden={this.state.checkEmail} 
+            color="secondary" 
+            onClick={this.toggleSignUpModal}>
+              Cancel
+          </Button>
         </ModalFooter>
       </Modal>
 
       <Modal isOpen={this.state.verifiedSignUpModal} toggle={this.toggleVerifiedSignUpModal}>
-        <ModalHeader toggle={this.toggleVerifiedSignUpModal}>New Username and Password</ModalHeader>
+        <ModalHeader toggle={this.toggleVerifiedSignUpModal}>Create Username and Password</ModalHeader>
         <ModalBody>
           <Form className="px-3 py-3">
             <FormGroup>
@@ -190,7 +204,7 @@ class CustomDropDown extends Component {
               />
             </FormGroup>
             <FormGroup>
-              <Input 
+              <Input
                 type="password"
                 value={this.state.password}
                 onChange={this.handlePassword}
@@ -200,8 +214,18 @@ class CustomDropDown extends Component {
           </Form>
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={this.completeSignUp}>Complete Sign Up</Button>{' '}
-          <Button color="secondary" onClick={this.toggleVerifiedSignUpModal}>Cancel</Button>
+          <Button
+            color="primary" 
+            onClick={this.completeSignUp}>
+              Complete Sign Up
+          </Button>
+          {' '}
+          <Button
+            color="secondary"
+            onClick={this.toggleVerifiedSignUpModal}>
+              Cancel
+          </Button>
+          
         </ModalFooter>
       </Modal>
 
