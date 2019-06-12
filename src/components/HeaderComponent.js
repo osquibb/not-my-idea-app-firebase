@@ -13,8 +13,7 @@ class CustomDropDown extends Component {
       verifiedSignUpModal: false,
       email: '',
       displayName: '',
-      password: '',
-      user: null
+      password: ''
     };
     this.toggleDropDown = this.toggleDropDown.bind(this);
     this.handleEmail = this.handleEmail.bind(this);
@@ -100,7 +99,7 @@ class CustomDropDown extends Component {
       <React.Fragment>
         <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropDown}>
           <DropdownToggle caret>
-            {this.props.auth.isAuthenticated ? this.props.auth.user.email : 'Sign Up / Sign In'}
+            {this.props.auth.isAuthenticated ? this.props.auth.user.displayName : 'Sign Up / Sign In'}
           </DropdownToggle>
           <DropdownMenu right={true} className="mt-2">
             {this.props.auth.isAuthenticated ?
@@ -179,8 +178,6 @@ class CustomDropDown extends Component {
         </ModalFooter>
       </Modal>
 
-      {/* TEST */}
-
       <Modal isOpen={this.state.verifiedSignUpModal} toggle={this.toggleVerifiedSignUpModal}>
         <ModalHeader toggle={this.toggleVerifiedSignUpModal}>New Username and Password</ModalHeader>
         <ModalBody>
@@ -208,8 +205,6 @@ class CustomDropDown extends Component {
           <Button color="secondary" onClick={this.toggleVerifiedSignUpModal}>Cancel</Button>
         </ModalFooter>
       </Modal>
-
-      {/* TEST */}
 
     </React.Fragment>
     );
