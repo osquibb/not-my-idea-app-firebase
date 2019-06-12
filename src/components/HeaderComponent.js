@@ -24,6 +24,7 @@ class CustomDropDown extends Component {
     this.toggleVerifiedSignUpModal = this.toggleVerifiedSignUpModal.bind(this);
     this.toggleDropDown = this.toggleDropDown.bind(this);
     this.signUpWithEmail = this.signUpWithEmail.bind(this);
+    this.completeSignUp = this.completeSignUp.bind(this);
     this.logIn = this.logIn.bind(this);
     this.logOut = this.logOut.bind(this);
   }
@@ -65,6 +66,16 @@ class CustomDropDown extends Component {
   signUpWithEmail() {
     this.props.signUpUser(this.state.email);
     this.toggleSignUpModal();
+  }
+
+  completeSignUp() {
+    this.props.completeSignUpUser(
+      {
+        displayName: this.state.displayName,
+        password: this.state.password
+      }
+    );
+    this.toggleVerifiedSignUpModal();
   }
 
   logOut() {
@@ -193,7 +204,7 @@ class CustomDropDown extends Component {
           </Form>
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={this.toggleVerifiedSignUpModal}>Complete Sign Up</Button>{' '}
+          <Button color="primary" onClick={this.completeSignUp}>Complete Sign Up</Button>{' '}
           <Button color="secondary" onClick={this.toggleVerifiedSignUpModal}>Cancel</Button>
         </ModalFooter>
       </Modal>
@@ -218,6 +229,7 @@ export default class Header extends Component {
             fetchLikedIdeas={this.props.fetchLikedIdeas}
             fetchFlaggedIdeas={this.props.fetchFlaggedIdeas}
             signUpUser={this.props.signUpUser}
+            completeSignUpUser={this.props.completeSignUpUser}
             loginUser={this.props.loginUser}
             googleLogin={this.props.googleLogin}
             logoutUser={this.props.logoutUser}

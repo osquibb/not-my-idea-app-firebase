@@ -444,33 +444,33 @@ export const checkForUser = () => dispatch => {
   });
 }
 
-// export const completeSignUpUser = ({displayName, password, url}) => dispatch => {
+export const completeSignUpUser = ({displayName, password}) => dispatch => {
+  if (fireauth().isSignInWithEmailLink(window.location.href)) {
 
-// if (fireauth().isSignInWithEmailLink(url)) {
+    let email = window.localStorage.getItem('emailForSignIn');
+    if (!email) {
+      dispatch(signUpError('Error: No Email Found'));
+    }
+    fireauth().signInWithEmailLink(email, window.location.href)
+      .then(result => {
+        window.localStorage.removeItem('emailForSignIn');
 
-//   let email = window.localStorage.getItem('emailForSignIn');
-//   if (!email) {
-//     email = window.prompt('Please provide your email for confirmation');
-//   }
-//   fireauth().signInWithEmailLink(email, url)
-//     .then(result => {
-//       window.localStorage.removeItem('emailForSignIn');
+      if (result.additionalUserInfo.isNewUser) {
+        let user = result.user;
 
-//       if (result.additionalUserInfo.isNewUser) {
-//         let user = result.user;
-
-//         user.updatePassword(password)
-//         .then(() => console.log('Password Set'))
-//         .catch(error => console.log(error));
+        user.updatePassword(password)
+        .then(() => console.log('Password Set'))
+        .catch(error => console.log(error));
   
-//         user.updateProfile({displayName: displayName})
-//         .then(() => console.log('Display Name Set'))
-//         .catch(error => console.log(error));
-//       }
-//       dispatch(receiveLogin(user));
-//     })
-//     .catch(error => dispatch(loginError(error.message)));
-// }
+        user.updateProfile({displayName: displayName})
+        .then(() => console.log('Display Name Set'))
+        .catch(error => console.log(error));
+      }
+      dispatch(receiveSignUp());
+    })
+    .catch(error => dispatch(signUpError(error.message)));
+  }
+}
 
 export const checkForVerified = () => dispatch => {
   let params = new URLSearchParams(window.location.search);

@@ -5,7 +5,8 @@ import Footer from './FooterComponent';
 import { Container } from 'reactstrap';
 import { connect } from 'react-redux';
 import { fetchIdeas, checkForMoreIdeas, postIdea, postLikedIdea, postFlaggedIdea, deleteLikedIdea, deleteFlaggedIdea, 
-				 fetchLikedIdeas, fetchFlaggedIdeas, loginUser, googleLogin, logoutUser, signUpUser, checkForUser, checkForVerified } from '../redux/ActionCreators';
+				 fetchLikedIdeas, fetchFlaggedIdeas, loginUser, googleLogin, logoutUser, signUpUser, checkForUser, checkForVerified,
+				 completeSignUpUser } from '../redux/ActionCreators';
 
 // map store state to props
 // each field contains a state
@@ -32,7 +33,8 @@ const mapDispatchToProps = dispatch => ({
 	logoutUser: () => dispatch(logoutUser()),
 	signUpUser: email => dispatch(signUpUser(email)),
 	checkForUser: () => dispatch(checkForUser()),
-	checkForVerified: () => dispatch(checkForVerified()) 
+	checkForVerified: () => dispatch(checkForVerified()),
+	completeSignUpUser: creds => dispatch(completeSignUpUser(creds)) 
 });
 
 class Main extends Component {
@@ -52,6 +54,7 @@ class Main extends Component {
 					checkForUser={this.props.checkForUser}
 					checkForVerified={this.props.checkForVerified}
 					signUpUser={this.props.signUpUser}
+					completeSignUpUser={this.props.completeSignUpUser}
 					loginUser={this.props.loginUser}
 					googleLogin={this.props.googleLogin}
 					logoutUser={this.props.logoutUser}
