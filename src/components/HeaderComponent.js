@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { fireauth } from '../firebase/firebase';
 import { Navbar, NavbarBrand, ButtonDropdown, DropdownToggle, DropdownMenu, 
         DropdownItem, Form, Input, FormGroup, Button, Modal, ModalHeader,
         ModalBody, ModalFooter } from 'reactstrap'; 
