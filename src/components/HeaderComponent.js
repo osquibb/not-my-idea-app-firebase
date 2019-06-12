@@ -12,12 +12,14 @@ class CustomDropDown extends Component {
       signUpModal: false,
       verifiedSignUpModal: false,
       email: '',
+      displayName: '',
       password: '',
       user: null
     };
     this.toggleDropDown = this.toggleDropDown.bind(this);
     this.handleEmail = this.handleEmail.bind(this);
     this.handlePassword = this.handlePassword.bind(this);
+    this.handleDisplayName = this.handleDisplayName.bind(this);
     this.toggleSignUpModal = this.toggleSignUpModal.bind(this);
     this.toggleVerifiedSignUpModal = this.toggleVerifiedSignUpModal.bind(this);
     this.toggleDropDown = this.toggleDropDown.bind(this);
@@ -76,6 +78,10 @@ class CustomDropDown extends Component {
 
   handlePassword(e) {
     this.setState({password: e.target.value})
+  }
+
+  handleDisplayName(e) {
+    this.setState({displayName: e.target.value})
   }
   
   render() {
@@ -165,18 +171,26 @@ class CustomDropDown extends Component {
       {/* TEST */}
 
       <Modal isOpen={this.state.verifiedSignUpModal} toggle={this.toggleVerifiedSignUpModal}>
-        <ModalHeader toggle={this.toggleVerifiedSignUpModal}>Set Password</ModalHeader>
+        <ModalHeader toggle={this.toggleVerifiedSignUpModal}>New Username and Password</ModalHeader>
         <ModalBody>
-        <Form className="px-3 py-3">
-                  <FormGroup>
-                    <Input 
-                      type="password"
-                      value={this.state.password}
-                      onChange={this.handlePassword}
-                      placeholder="Password"
-                    />
-                  </FormGroup>
-                </Form>
+          <Form className="px-3 py-3">
+            <FormGroup>
+              <Input 
+                type="text"
+                value={this.state.displayName}
+                onChange={this.handleDisplayName}
+                placeholder="Username"
+              />
+            </FormGroup>
+            <FormGroup>
+              <Input 
+                type="password"
+                value={this.state.password}
+                onChange={this.handlePassword}
+                placeholder="Password"
+              />
+            </FormGroup>
+          </Form>
         </ModalBody>
         <ModalFooter>
           <Button color="primary" onClick={this.toggleVerifiedSignUpModal}>Complete Sign Up</Button>{' '}
