@@ -21,6 +21,7 @@ export const Auth = (state = {
             return {...state,
                 isLoading: false,
                 isAuthenticated: true,
+                isSignedUp: true,
                 errMess: '',
                 user: action.user
             };
@@ -43,8 +44,7 @@ export const Auth = (state = {
             };
         case ActionTypes.SIGN_UP_REQUEST:
                 return {...state,
-                    isLoading: true,
-                    isSignedUp: false
+                    isLoading: true
                 };
             case ActionTypes.SIGN_UP_SUCCESS:
                 return {...state,
