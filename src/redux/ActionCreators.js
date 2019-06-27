@@ -88,7 +88,7 @@ export const postIdea = ideaText => dispatch => {
     text: ideaText,
     author: {
       '_id': auth.currentUser.uid,
-      'username' : auth.currentUser.displayName ? auth.currentUser.displayName : auth.currentUser.email
+      'username' : auth.currentUser.displayName ? auth.currentUser.displayName : 'unknown'
     },
     likedRank: 0,
     flaggedRank: 0,
