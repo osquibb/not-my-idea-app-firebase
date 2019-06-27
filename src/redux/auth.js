@@ -7,6 +7,7 @@ export const Auth = (state = {
         isLoading: false,
         isAuthenticated: false,
         isSignedUp: false,
+        newUser: false,
         verified: false,
         user: null,
         errMess: null
@@ -22,6 +23,7 @@ export const Auth = (state = {
                 isLoading: false,
                 isAuthenticated: true,
                 isSignedUp: true,
+                newUser: false,
                 errMess: '',
                 user: action.user
             };
@@ -40,7 +42,8 @@ export const Auth = (state = {
             return {...state,
                 isLoading: false,
                 isAuthenticated: false,
-                user: null
+                user: null,
+                newUser: false
             };
         case ActionTypes.SIGN_UP_REQUEST:
                 return {...state,
@@ -49,7 +52,8 @@ export const Auth = (state = {
             case ActionTypes.SIGN_UP_SUCCESS:
                 return {...state,
                     isLoading: false,
-                    isSignedUp: true
+                    isSignedUp: true,
+                    newUser: false
                 };
             case ActionTypes.SIGN_UP_FAILURE:
                 return {...state,
@@ -60,6 +64,10 @@ export const Auth = (state = {
             case ActionTypes.SET_VERIFIED:
                 return {...state,
                     verified: action.payload
+                };
+            case ActionTypes.SET_NEW_USER:
+                return {...state,
+                    newUser: action.payload
                 };
 
         default:

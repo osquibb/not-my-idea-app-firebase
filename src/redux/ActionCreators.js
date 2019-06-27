@@ -439,9 +439,17 @@ export const checkForUser = () => dispatch => {
     if (user) {
       dispatch(receiveLogin(user));
     } else {
+      dispatch(setNewUser());
       console.log('No user logged in');
     }
   });
+}
+
+const setNewUser = (isNewUser = true) => {
+  return {
+    type: ActionTypes.SET_NEW_USER,
+    payload: isNewUser
+  }
 }
 
 export const completeSignUpUser = ({displayName, password}) => dispatch => {
@@ -465,8 +473,12 @@ export const completeSignUpUser = ({displayName, password}) => dispatch => {
         user.updateProfile({displayName: displayName})
         .then(() => console.log('Display Name Set'))
         .catch(error => console.log(error));
+
+        window.history.replaceState(null, null, window.location.pathname);
+        dispatch(setVerified(false));
       }
       dispatch(receiveSignUp());
+      dispatch(setNewUser(false));
     })
     .catch(error => dispatch(signUpError(error.message)));
   }
@@ -546,6 +558,7 @@ export const logoutUser = () => dispatch => {
   .catch((error) => console.log(error));
 
   localStorage.removeItem('user');
+  dispatch(setNewUser(false));
   dispatch(removeLikedAndFlaggedIdeas());
   dispatch(receiveLogout());
   

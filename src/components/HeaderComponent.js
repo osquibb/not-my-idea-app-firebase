@@ -9,7 +9,6 @@ class CustomDropDown extends Component {
     this.state = {
       dropdownOpen: false,
       signUpModal: false,
-      verifiedSignUpModal: false,
       checkEmail: false,
       email: '',
       displayName: '',
@@ -20,7 +19,6 @@ class CustomDropDown extends Component {
     this.handlePassword = this.handlePassword.bind(this);
     this.handleDisplayName = this.handleDisplayName.bind(this);
     this.toggleSignUpModal = this.toggleSignUpModal.bind(this);
-    this.toggleVerifiedSignUpModal = this.toggleVerifiedSignUpModal.bind(this);
     this.toggleDropDown = this.toggleDropDown.bind(this);
     this.signUpWithEmail = this.signUpWithEmail.bind(this);
     this.completeSignUp = this.completeSignUp.bind(this);
@@ -30,16 +28,7 @@ class CustomDropDown extends Component {
 
   componentDidMount() {
     this.props.checkForUser();
-    this.checkVerifiedAndToggleModal();
-  }
-
-  async checkVerifiedAndToggleModal() {
-    await this.props.checkForVerified();
-    if (this.props.auth.verified) {
-      this.setState({verifiedSignUpModal: true});
-    } else {
-      this.setState({verifiedSignUpModal: false});
-    }
+    this.props.checkForVerified();
   }
 
   async logIn() {
@@ -52,10 +41,6 @@ class CustomDropDown extends Component {
 
   toggleDropDown() {
     this.setState(prevState => ({dropdownOpen: !prevState.dropdownOpen}));
-  }
-
-  toggleVerifiedSignUpModal() {
-    this.setState(prevState => ({verifiedSignUpModal: !prevState.verifiedSignUpModal}));
   }
 
   toggleSignUpModal() {
@@ -74,7 +59,6 @@ class CustomDropDown extends Component {
         password: this.state.password
       }
     );
-    this.toggleVerifiedSignUpModal();
   }
 
   logOut() {
@@ -191,8 +175,8 @@ class CustomDropDown extends Component {
         </ModalFooter>
       </Modal>
 
-      <Modal isOpen={this.state.verifiedSignUpModal} toggle={this.toggleVerifiedSignUpModal}>
-        <ModalHeader toggle={this.toggleVerifiedSignUpModal}>Create Username and Password</ModalHeader>
+      <Modal isOpen={this.props.auth.newUser && this.props.auth.verified} toggle={this.toggleNewUserModal}>
+        <ModalHeader toggle={this.toggleNewUserModal}>Create Username and Password</ModalHeader>
         <ModalBody>
           <Form className="px-3 py-3">
             <FormGroup>
@@ -222,7 +206,7 @@ class CustomDropDown extends Component {
           {' '}
           <Button
             color="secondary"
-            onClick={this.toggleVerifiedSignUpModal}>
+            onClick={this.toggleNewUserModal}>
               Cancel
           </Button>
           
