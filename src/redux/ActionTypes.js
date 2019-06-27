@@ -1,4 +1,5 @@
 export const ADD_IDEAS = 'ADD_IDEAS';
+export const REMOVE_IDEA = 'REMOVE_IDEA';
 export const ADD_LIKED_IDEAS = 'ADD_LIKED_IDEAS';
 export const ADD_FLAGGED_IDEAS = 'ADD_FLAGGED_IDEAS';
 export const REMOVE_LIKED_IDEA = 'REMOVE_LIKED_IDEA';
@@ -10,9 +11,9 @@ export const IDEAS_LOADING = 'IDEAS_LOADING';
 export const IDEAS_FAILED = 'IDEAS_FAILED';
 export const UPDATE_LAST_VISIBLE = 'UPDATE_LAST_VISIBLE';
 export const UPDATE_MORE_IDEAS = 'UPDATE_MORE_IDEAS';
+
 export const SET_VERIFIED = 'SET_VERIFIED';
 export const SET_NEW_USER = 'SET_NEW_USER';
-
 export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST';
 export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
 export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE';

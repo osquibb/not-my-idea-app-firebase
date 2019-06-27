@@ -111,6 +111,33 @@ export const postIdea = ideaText => dispatch => {
       alert('Your Idea could not be posted\nError: '+ error.message); })
 };
 
+//.. TESTING
+
+export const deleteIdea = (ideaId) => dispatch => {
+
+  if (!auth.currentUser) {
+    console.log('No user logged in!');
+    return;
+  }
+
+  let user = auth.currentUser;
+
+  return firestore.collection('ideas').doc(ideaId).get()
+    .then(idea => {
+      if (idea.exists && user.uid === idea.data().author._id) {
+        firestore.collection('ideas').doc(ideaId).delete()
+        .then(() => {
+          dispatch(removeIdea(ideaId));
+          console.log(`Idea ${ideaId} deleted`);
+        })
+        .catch(error => console.log(error));
+      }
+    })
+    .catch(error => console.log(error));
+}
+
+//.. TESTING
+
 export const fetchLikedIdeas = () => dispatch => {
 
   if (!auth.currentUser) {
@@ -155,7 +182,7 @@ export const fetchFlaggedIdeas = () => dispatch => {
     .catch(error => dispatch(ideasFailed(error.message)));
 };
 
-// TODO: test
+
 export const postLikedIdea = ideaId => dispatch => {
 
   if (!auth.currentUser) {
@@ -183,7 +210,7 @@ export const postLikedIdea = ideaId => dispatch => {
   })
 };
 
-// TODO: test
+
 export const postFlaggedIdea = ideaId => dispatch => {
   
   if (!auth.currentUser) {
@@ -211,7 +238,7 @@ export const postFlaggedIdea = ideaId => dispatch => {
   })
 };
 
-// TODO: test
+
 export const deleteLikedIdea = ideaId => dispatch => {
 
   if (!auth.currentUser) {
@@ -234,7 +261,7 @@ export const deleteLikedIdea = ideaId => dispatch => {
   .catch(error => dispatch(ideasFailed(error.message)));
 };
 
-// TODO: test
+
 export const deleteFlaggedIdea = ideaId => dispatch => {
   if (!auth.currentUser) {
     console.log('No user logged in!');
@@ -364,13 +391,24 @@ const decrementFlaggedRank = ideaId => dispatch => {
   }).catch(error => console.error(error));
 };
 
-export const addIdeas = ideas => {
+const addIdeas = ideas => {
   return(
     { type: ActionTypes.ADD_IDEAS,
       payload: ideas
     }
   );
 };
+
+//.. TESTING
+const removeIdea = ideaId => {
+  return(
+    { type: ActionTypes.REMOVE_IDEA,
+      payload: ideaId
+    }
+  )
+}
+
+//.. TESTING
 
 const ideasLoading = () => (
   { type: ActionTypes.IDEAS_LOADING }

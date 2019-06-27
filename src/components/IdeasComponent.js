@@ -13,7 +13,7 @@ function RenderIdeas(props) {
 				<Col xs="2" className="text-center">
 					<Row className="align-items-center">
 						<Col>
-							<div 	 className={props.likedIdeas.indexOf(idea._id) !== -1
+							<i 	 className={props.likedIdeas.indexOf(idea._id) !== -1
 																? "fas fa-lightbulb fa-2x idea-button"	
 																: "far fa-lightbulb fa-2x idea-button"}
 											onClick={() =>{
@@ -42,26 +42,47 @@ function RenderIdeas(props) {
 					</ListGroupItemText>
 				</Col>
 				<Col xs="2" className="text-center">
+					<Row>
+						<Col>
+							<i 
+								className={props.auth.user ? props.auth.user.uid === idea.author._id
+									? "far fa-trash-alt fa-2x idea-button mb-3"
+									: null : null}					
+								onClick={() => props.deleteIdea(idea._id)}
+								/>
+						</Col>
+					</Row>
 					<Row className="align-items-center">
 						<Col>
-							<div style={{"fontSize": "1.6rem"}} 
-										className={props.flaggedIdeas.indexOf(idea._id) !== -1
-															? "fas fa-flag float-right text-warning idea-button"
-															: "far fa-flag float-right text-warning idea-button"}					
-										onClick={() =>{
-											if (props.flaggedIdeas.indexOf(idea._id) === -1) {
-												props.postFlaggedIdea(idea._id);
-											}
-											else {
-												props.deleteFlaggedIdea(idea._id);
-											}
-										}}
+							<i 
+								className={props.flaggedIdeas.indexOf(idea._id) !== -1
+									? "fas fa-flag text-warning idea-button"
+									: "far fa-flag text-warning idea-button"}					
+								onClick={() => {
+									if (props.flaggedIdeas.indexOf(idea._id) === -1) {
+										props.postFlaggedIdea(idea._id);
+									}
+									else {
+										props.deleteFlaggedIdea(idea._id);
+									}
+								}}
 							/>
 						</Col>
 					</Row>
 					<Row>
-						<Col className="text-muted" style={{"fontSize": ".75rem"}}>
-							<p className="float-right">Report</p>
+						<Col>
+							<span style={{fontSize: '.8rem'}}
+								className="idea-button text-warning"
+								onClick={() => {
+									if (props.flaggedIdeas.indexOf(idea._id) === -1) {
+										props.postFlaggedIdea(idea._id);
+									}
+									else {
+										props.deleteFlaggedIdea(idea._id);
+									}
+								}}>
+									Report
+								</span>
 						</Col>
 					</Row>	
 				</Col>
@@ -156,6 +177,7 @@ componentDidUpdate(prevProps) {
 							<RenderIdeas 
 								auth={this.props.auth}
 								ideas={this.props.ideas}
+								deleteIdea={this.props.deleteIdea}
 								likedIdeas={this.props.likedIdeas}
 								flaggedIdeas={this.props.flaggedIdeas}
 								postLikedIdea={this.props.postLikedIdea}

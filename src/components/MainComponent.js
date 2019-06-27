@@ -4,7 +4,7 @@ import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { Container } from 'reactstrap';
 import { connect } from 'react-redux';
-import { fetchIdeas, checkForMoreIdeas, postIdea, postLikedIdea, postFlaggedIdea, deleteLikedIdea, deleteFlaggedIdea, 
+import { fetchIdeas, checkForMoreIdeas, postIdea, deleteIdea, postLikedIdea, postFlaggedIdea, deleteLikedIdea, deleteFlaggedIdea, 
 				 fetchLikedIdeas, fetchFlaggedIdeas, loginUser, googleLogin, logoutUser, signUpUser, checkForUser, checkForVerified,
 				 completeSignUpUser } from '../redux/ActionCreators';
 
@@ -24,6 +24,7 @@ const mapDispatchToProps = dispatch => ({
 	fetchLikedIdeas: () => dispatch(fetchLikedIdeas()),
 	fetchFlaggedIdeas: () => dispatch(fetchFlaggedIdeas()),
 	postIdea: idea => dispatch(postIdea(idea)),
+	deleteIdea: ideaId => dispatch(deleteIdea(ideaId)),
 	postLikedIdea: ideaId => dispatch(postLikedIdea(ideaId)),
 	postFlaggedIdea: ideaId => dispatch(postFlaggedIdea(ideaId)),
 	deleteLikedIdea: ideaId => dispatch(deleteLikedIdea(ideaId)),
@@ -74,6 +75,7 @@ class Main extends Component {
 					flaggedIdeas={this.props.ideas.flaggedIdeas}
 					auth={this.props.auth}
 					postIdea={this.props.postIdea}
+					deleteIdea={this.props.deleteIdea}
 					postFlaggedIdea={this.props.postFlaggedIdea}
 					postLikedIdea={this.props.postLikedIdea}
 					deleteLikedIdea={this.props.deleteLikedIdea}

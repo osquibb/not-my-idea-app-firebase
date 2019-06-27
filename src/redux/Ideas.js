@@ -26,6 +26,17 @@ export const Ideas = (state = {
                    ideas: action.payload.concat(state.ideas)
         };
 
+      // TESTING...
+
+      case ActionTypes.REMOVE_IDEA:
+        return {...state,
+                    isLoading: false,
+                    errorMessage: null,
+                    ideas: state.ideas.filter(idea => idea._id !== action.payload)
+        };
+
+      // TESTING...
+
       case ActionTypes.UPDATE_LAST_VISIBLE:
           return {...state,
                      lastVisible: action.payload
