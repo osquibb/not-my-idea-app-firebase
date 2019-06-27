@@ -88,10 +88,10 @@ class CustomDropDown extends Component {
           <DropdownMenu right={true} className="mt-2">
             {this.props.auth.isAuthenticated ?
               <Form>
-                <FormGroup>
-                  <Button 
+                <FormGroup className="text-center mt-3">
+                  <Button
+                    color="info" 
                     className="mx-auto my-auto"
-                    outline={true}
                     onClick={this.logOut}
                   >
                     Log Out

@@ -131,6 +131,21 @@ export const deleteIdea = (ideaId) => dispatch => {
           console.log(`Idea ${ideaId} deleted`);
         })
         .catch(error => console.log(error));
+
+        firestore.collection('likedIdeas').where('ideaId', '==', ideaId).get()
+        .then(snapshot => {
+          snapshot.forEach(likedIdea => likedIdea.ref.delete())
+        })
+        .catch(error => console.log(error));
+
+        firestore.collection('flaggedIdeas').where('ideaId', '==', ideaId).get()
+        .then(snapshot => {
+          snapshot.forEach(flaggedIdea => flaggedIdea.ref.delete())
+        })
+        .catch(error => console.log(error));
+
+        dispatch(removeLikedIdea(ideaId));
+        dispatch(removeFlaggedIdea(ideaId));
       }
     })
     .catch(error => console.log(error));
